@@ -1,5 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomiclabs/hardhat-ethers";
+import "@nomiclabs/hardhat-waffle";
 import * as dotenv from "dotenv";
 
 dotenv.config({ path: '.env.local' });
@@ -20,8 +21,14 @@ const config: HardhatUserConfig = {
             accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
             chainId: 84532,
         },
+        hardhat: {
+            chainId: 31337,
+        },
     },
-
+    paths: {
+        tests: "./test",
+        artifacts: "./artifacts",
+    },
 };
 
 export default config;

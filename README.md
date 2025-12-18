@@ -1,389 +1,215 @@
-# ARPO Studio - Developer Documentation
+# 🎨 ARPO Studio - NFT Auction House
 
-A premium on-chain NFT auction platform built with Next.js 15, designed for Base Sepolia testnet deployment.
+> A next-generation NFT auction platform built on Base, featuring real-time bidding, live chat, and a stunning user experience.
+
+![ARPO Studio](https://img.shields.io/badge/Built%20on-Base-blue) ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue) ![Supabase](https://img.shields.io/badge/Supabase-Realtime-green)
 
 ---
 
-## 🏗️ System Architecture
+## ✨ Features
 
-```mermaid
-graph TB
-    subgraph Frontend["Frontend (Next.js 15)"]
-        UI[React Components]
-        Hooks[Custom Hooks]
-        Context[Auction Context]
-    end
-    
-    subgraph Blockchain["Blockchain (Base Sepolia)"]
-        NFT[ARPONFT Contract]
-        AH[AuctionHouse Contract]
-    end
-    
-    subgraph Storage["Storage (Future)"]
-        DB[(Supabase)]
-        IPFS[Pinata IPFS]
-    end
-    
-    UI --> Hooks
-    Hooks --> Context
-    Context --> AH
-    AH --> NFT
-    
-    UI -.-> DB
-    UI -.-> IPFS
-    
-    style Frontend fill:#e1f5fe
-    style Blockchain fill:#fff3e0
-    style Storage fill:#e8f5e9
+### 🎯 Core Functionality
+- **Live Auctions** - Real-time bidding with countdown timers
+- **Quick Bid System** - One-click min/max bidding from chat
+- **MAX PAIN Mode** - Aggressive bidding strategy for whales
+- **Bid Extensions** - Automatic 30-second extension in final moments
+
+### 💬 Social Features
+- **Live Auction Chat** - Real-time messaging during auctions
+- **User Badges** - Tier system based on bid count
+- **@Mentions** - Tag other users in chat
+- **Display Names** - ENS support with 24h cooldown
+
+### 🛡️ Security
+- **XSS Prevention** - Message sanitization
+- **Bid Validation** - Client and server-side checks
+- **Rate Limiting** - Spam protection
+- **RLS Policies** - Supabase row-level security
+
+### 🎨 User Experience
+- **Dark/Light Mode** - Full theme support
+- **Responsive Design** - Mobile-first approach
+- **Glassmorphism UI** - Modern aesthetic
+- **Smooth Animations** - Polished interactions
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- MetaMask wallet
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/bigf0tApple/final-auction1.git
+cd final-auction1
+
+# Install dependencies
+npm install
+
+# Copy environment file
+cp env.example.md .env.local
+# Edit .env.local with your values
+
+# Run development server
+npm run dev
 ```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## ⚙️ Environment Setup
+
+Create `.env.local` with:
+
+```env
+# Supabase (Required)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+
+# Admin Access
+NEXT_PUBLIC_ADMIN_WALLET=0xYourWalletAddress
+
+# Contracts (after deployment)
+NEXT_PUBLIC_AUCTION_HOUSE_CONTRACT=0x...
+NEXT_PUBLIC_NFT_CONTRACT=0x...
+
+# Chain Config
+NEXT_PUBLIC_RPC_URL=https://sepolia.base.org
+NEXT_PUBLIC_CHAIN_ID=84532
+```
+
+---
+
+## 🗄️ Database Setup
+
+1. Create a [Supabase](https://supabase.com) project
+2. Run `lib/schema.sql` in the SQL Editor
+3. Enable Realtime for `chat_messages` table
+
+---
+
+## 📦 Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | Next.js 15, React 18, TypeScript |
+| **Styling** | Tailwind CSS, shadcn/ui |
+| **Database** | Supabase, PostgreSQL |
+| **Blockchain** | Ethereum, Base Sepolia |
+| **Contracts** | Solidity 0.8.20, Hardhat |
+| **IPFS** | Pinata (optional) |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-/ARPOSTUDIO AUTIONHOUSE FINAL
-│
-├── app/                          # Next.js App Router
-│   ├── page.tsx                  # Main auction page (THE core file)
-│   ├── admin-panel.tsx           # Admin: mint, analytics, chat mgmt
-│   ├── layout.tsx                # Root layout with providers
-│   ├── globals.css               # Global styles
-│   └── [route]/page.tsx          # Static pages (team, why, etc.)
-│
-├── components/                   # React Components
-│   ├── ui/                       # shadcn/ui primitives (50 files)
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── input.tsx
-│   │   └── ...
-│   │
-│   ├── auction-chat.tsx          # Live chat with @mentions
-│   ├── chat-button.tsx           # Chat trigger button
-│   ├── auction-ending-banner.tsx # Countdown + confetti + winner modal
-│   ├── user-profile-modal.tsx    # Create/edit profile
-│   ├── user-profile-page.tsx     # View user profile
-│   ├── search-modal.tsx          # Search users/auctions
-│   ├── mention-input.tsx         # @mention autocomplete
-│   ├── reminder-modal.tsx        # Auction reminders
-│   ├── wallet-connect-modal.tsx  # Wallet connection
-│   ├── demo-charts.tsx           # Analytics charts
-│   └── ...
-│
-├── contracts/                    # Solidity Smart Contracts
-│   └── AuctionHouse.sol          # ARPONFT + ARPOAuctionHouse
-│
-├── hooks/                        # Custom React Hooks
-│   ├── use-auction-state.ts      # Auction state management
-│   ├── use-user-profile.ts       # Profile CRUD (localStorage)
-│   ├── use-chat-pinned.ts        # Chat position state
-│   ├── use-client-auctions.ts    # Auction data fetching
-│   └── use-toast.ts              # Toast notifications
-│
-├── lib/                          # Utilities & Business Logic
-│   ├── contracts.ts              # ethers.js contract helpers
-│   ├── onchain.ts                # On-chain bid submission
-│   ├── auction-data.ts           # Auction scheduling logic
-│   ├── schema.sql                # Supabase database schema
-│   └── utils.ts                  # General helpers
-│
-├── types/                        # TypeScript Types
-│   └── accepted-token.ts         # Token configuration
-│
-├── Audit strats/                 # 70 flow map files for auditing
-│
-└── public/                       # Static assets
+├── app/                    # Next.js app directory
+│   ├── page.tsx           # Main auction page
+│   └── admin-panel.tsx    # Admin dashboard
+├── components/            # React components
+│   ├── admin/            # Admin-specific components
+│   ├── ui/               # Reusable UI components
+│   └── *.tsx             # Feature components
+├── contracts/            # Solidity contracts
+│   ├── AuctionHouse.sol  # Main auction contract
+│   ├── ARPONFT.sol       # NFT contract
+│   └── interfaces/       # Contract interfaces
+├── hooks/                # Custom React hooks
+├── lib/                  # Utility libraries
+│   ├── supabase.ts       # Database client
+│   ├── contracts.ts      # Blockchain interactions
+│   ├── sanitize.ts       # XSS prevention
+│   └── pinata.ts         # IPFS uploads
+├── test/                 # Contract tests
+└── scripts/              # Deployment scripts
 ```
-
----
-
-## 🔄 Auction Flow
-
-```mermaid
-sequenceDiagram
-    participant Artist
-    participant Admin
-    participant Contract
-    participant Bidder
-    participant Winner
-
-    Artist->>Admin: Submit artwork
-    Admin->>Contract: createAuction()
-    Note over Contract: Auction scheduled
-    
-    loop Bidding Period
-        Bidder->>Contract: placeBid()
-        Contract-->>Bidder: BidPlaced event
-        Note over Contract: If last 10s, extend by 10s
-    end
-    
-    Note over Contract: Auction ends
-    Admin->>Contract: settleAuction()
-    Contract->>Winner: Transfer NFT
-    Contract->>Artist: Transfer ETH (minus 5% fee)
-    Contract-->>Admin: AuctionSettled event
-```
-
----
-
-## 💡 Key Concepts
-
-### On-Chain Only Bidding
-
-All bids are blockchain transactions. There is **no platform wallet** - users bid directly from their connected wallet.
-
-```typescript
-// lib/contracts.ts
-async function placeBidOnChain(auctionId: number, bidAmount: string) {
-  const signer = await getSigner()
-  const contract = getAuctionHouseContract(signer)
-  const tx = await contract.placeBid(auctionId, {
-    value: ethers.utils.parseEther(bidAmount),
-  })
-  return tx
-}
-```
-
-### Anti-Sniping Mechanism
-
-Bids in the final 10 seconds extend the auction by 10 more seconds:
-
-```solidity
-// contracts/AuctionHouse.sol
-if (auction.endTime - block.timestamp <= 10 seconds) {
-    auction.endTime += 10 seconds;
-    emit BidPlaced(auctionId, msg.sender, msg.value, true); // extended = true
-}
-```
-
-### Bid Increments
-
-- **Minimum bid**: 1% above current bid
-- **Maximum bid** (final 10s): 10% above current bid
-
-### Refunds
-
-When outbid, funds are held in the contract. Users can claim via:
-
-```typescript
-await contract.claimRefund()
-```
-
----
-
-## 🗄️ Data Strategy
-
-### Real-Time Data (Blockchain)
-
-| Data | Source | Why |
-|------|--------|-----|
-| Current bid | Contract.getAuction() | Must be accurate |
-| Highest bidder | Contract.getAuction() | Immutable |
-| End time | Contract.getAuctionEndTime() | May extend |
-| Settlement status | Contract.getAuction().settled | On-chain proof |
-
-### Historical Data (Supabase - Future)
-
-| Data | Source | Why |
-|------|--------|-----|
-| Past auction history | Database | Fast queries |
-| User stats | Database | Aggregated |
-| Chat messages | Database | Persistent |
-| User profiles | Database | Editable |
-
-### Current Demo Mode
-
-Uses `localStorage` for:
-- User profiles (`arpo_users`)
-- Display names (`displayName_${wallet}`)
-
----
-
-## 🧩 Component Hierarchy
-
-```
-AuctionSite (page.tsx)
-├── Header
-│   ├── Logo
-│   ├── Navigation (Menu, Why, Team, etc.)
-│   ├── Theme Toggle
-│   ├── Search Button → SearchModal
-│   └── Connect Wallet → WalletConnectModal
-│
-├── Main Content
-│   ├── NFT Image Display
-│   ├── Auction Info (Price, Time, Bidder)
-│   ├── Bid Buttons
-│   │   ├── Min Bid (1%)
-│   │   └── Max Bid (10%)
-│   └── Related Info
-│
-├── Floating Elements
-│   ├── ChatButton → AuctionChat
-│   ├── AuctionEndingBanner (final 10s)
-│   └── Notifications
-│
-└── Modals
-    ├── UserProfileModal
-    ├── SettingsModal (Notifications, Theme, Profile)
-    ├── TransactionModal (Bid confirm/status)
-    ├── MintFlowModal (Admin mint wizard)
-    ├── AdminPanel
-    ├── ReminderModal
-    └── Various Pages (Team, Why, etc.)
-```
-
----
-
-## ⚙️ State Management
-
-### Auction Context (`auction-context.tsx`)
-
-```typescript
-interface AuctionState {
-  currentBid: number
-  highestBidder: string | null
-  launchPrice: number
-  bidCount: number
-}
-
-const { auctionState, placeBid, getMinBid, getMaxBid } = useAuction()
-```
-
-### User Profile Hook (`use-user-profile.ts`)
-
-```typescript
-const {
-  userProfile,       // Current user's profile
-  saveProfile,       // Save profile to storage
-  getDisplayName,    // username > wallet shorthand
-  showProfileModal,  // Trigger profile creation
-  isFirstTimeUser,   // First-time visitor
-} = useUserProfile(connectedWallet)
-```
-
-### Notifications & Settings (`use-notifications.ts`)
-
-```typescript
-const {
-  permission,        // Browser permission status
-  soundEnabled,      // Audio toggle state
-  requestPermission, // Prompt user
-  notifyBidPlaced,   // Trigger bid notification
-} = useNotifications()
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- MetaMask or compatible wallet
-- Base Sepolia testnet ETH
-
-### Installation
-
-```bash
-# Install dependencies
-npm install
-
-# Start dev server
-npm run dev
-
-# Build for production
-npm run build
-```
-
-### Environment Variables
-
-```env
-# Required
-NEXT_PUBLIC_CHAIN_ID=84532
-NEXT_PUBLIC_RPC_URL=https://sepolia.base.org
-NEXT_PUBLIC_ADMIN_WALLET=0xYourAddress
-
-# After contract deployment
-NEXT_PUBLIC_AUCTION_HOUSE_CONTRACT=0x...
-NEXT_PUBLIC_NFT_CONTRACT=0x...
-```
-
----
-
-## 📜 Smart Contracts
-
-### ARPONFT (ERC-721)
-
-```solidity
-contract ARPONFT is ERC721URIStorage, Ownable {
-    function mint(address to, address artist, string metadataURI) external onlyAuctionHouse returns (uint256)
-    function getArtist(uint256 tokenId) external view returns (address)
-}
-```
-
-### ARPOAuctionHouse
-
-```solidity
-contract ARPOAuctionHouse is ReentrancyGuard, Ownable, Pausable {
-    function createAuction(...) external onlyOwner returns (uint256)
-    function placeBid(uint256 auctionId) external payable
-    function settleAuction(uint256 auctionId) external
-    function claimRefund() external
-}
-```
-
-See `contracts/AuctionHouse.sol` for full implementation.
 
 ---
 
 ## 🧪 Testing
 
-### Local Development
-
 ```bash
-npm run dev
-# Open http://localhost:3000
+# Run contract tests
+npx hardhat test
 
-# Use "Demo: Connect as Admin" for admin panel
-```
+# Run with coverage
+npx hardhat coverage
 
-### Build Verification
-
-```bash
-npm run build && npm start
-```
-
-### Type Checking
-
-```bash
+# Type check
 npx tsc --noEmit
 ```
 
 ---
 
-## 📝 Key Files Quick Reference
+## 🚢 Deployment
 
-| What | Where |
-|------|-------|
-| Main page logic | `app/page.tsx` |
-| Admin panel | `app/admin-panel.tsx` |
-| Bidding logic | `lib/onchain.ts` |
-| Contract helpers | `lib/contracts.ts` |
-| Smart contracts | `contracts/AuctionHouse.sol` |
-| Auction state | `hooks/use-auction-state.ts` |
-| User profiles | `hooks/use-user-profile.ts` |
-| Chat component | `components/auction-chat.tsx` |
-| DB schema | `lib/schema.sql` |
+### Frontend (Vercel)
+```bash
+vercel --prod
+```
+
+### Smart Contracts (Base Sepolia)
+```bash
+# Add PRIVATE_KEY to .env.local first
+npx hardhat run scripts/deploy.ts --network baseSepolia
+```
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 
 ---
 
-## 🔗 Resources
+## 📊 Architecture
 
-- [Base Sepolia Faucet](https://www.coinbase.com/faucets/base-ethereum-sepolia-faucet)
-- [Basescan Sepolia](https://sepolia.basescan.org)
-- [ethers.js v5 Docs](https://docs.ethers.io/v5/)
-- [Next.js Docs](https://nextjs.org/docs)
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Frontend (Next.js)                       │
+├────────────────────────┬────────────────────────────────────────┤
+│    React Components    │           State Management              │
+│  • Auction Display     │  • useAuction (bid state)              │
+│  • Chat Interface      │  • useUserProfile (profiles)           │
+│  • Admin Panel         │  • useChatPinned (chat position)       │
+└────────────────────────┴────────────────────────────────────────┘
+            │                              │
+            ▼                              ▼
+┌─────────────────────┐       ┌─────────────────────────────────┐
+│   Supabase          │       │       Base Sepolia              │
+│  • chat_messages    │       │  • ARPOAuctionHouse.sol         │
+│  • users            │       │  • ARPONFT.sol                  │
+│  • auctions         │       │  • Bidding & Settlement          │
+│  • Real-time sync   │       │                                 │
+└─────────────────────┘       └─────────────────────────────────┘
+```
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+MIT License - see [LICENSE](./LICENSE) for details.
+
+---
+
+## 🔗 Links
+
+- **Live Site**: https://arpo-auction-house.vercel.app
+- **GitHub**: https://github.com/bigf0tApple/final-auction1
+- **Base Sepolia Explorer**: https://sepolia.basescan.org
 
 ---
 

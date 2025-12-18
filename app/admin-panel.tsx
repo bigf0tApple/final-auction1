@@ -1554,7 +1554,8 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
           onClose={() => setShowMintFlow(false)}
           isDark={isDark}
           onMintComplete={(tokenId, txHash) => {
-            console.log('Minted:', tokenId, txHash)
+            // Mint completed - tokenId and txHash available for tracking
+            void tokenId; void txHash;
             setShowMintFlow(false)
           }}
         />
