@@ -102,7 +102,7 @@ export default function AuctionChat({
   useEffect(() => {
     if (!activeAuctionId || !isSupabaseConnected) return
 
-    let channel: any
+    let channel: ReturnType<typeof subscribeToChatMessages> | null = null
 
     const loadChat = async () => {
       const history = await getAuctionChat(activeAuctionId)

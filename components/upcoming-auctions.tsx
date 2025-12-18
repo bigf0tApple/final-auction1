@@ -6,9 +6,21 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
+interface UpcomingAuction {
+    id: number
+    title: string
+    artist: string
+    image?: string
+    startingBid: string
+    status: string
+    startTime?: string | Date
+    teaserImage?: string
+    mainImage?: string
+}
+
 interface UpcomingAuctionsProps {
-    auctions: any[]
-    onSetReminder: (auction: any) => void
+    auctions: UpcomingAuction[]
+    onSetReminder: (auction: UpcomingAuction) => void
     isDark: boolean
 }
 

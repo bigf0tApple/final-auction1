@@ -173,10 +173,10 @@ export function useUserProfile(connectedWallet: string) {
         if (!query || query.length < 2) return []
         const existingUsers = JSON.parse(localStorage.getItem("arpo_users") || "{}")
         const lowerQuery = query.toLowerCase()
-        return Object.values(existingUsers).filter((user: any) =>
+        return (Object.values(existingUsers) as UserProfile[]).filter((user: UserProfile) =>
             user.username?.toLowerCase().includes(lowerQuery) ||
             user.wallet.toLowerCase().includes(lowerQuery)
-        ) as UserProfile[]
+        )
     }, [])
 
     return {
