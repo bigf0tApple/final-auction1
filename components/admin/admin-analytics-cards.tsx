@@ -5,11 +5,11 @@ import { DollarSign, Gavel, TrendingUp, Activity, UserPlus, Eye } from "lucide-r
 
 interface AnalyticsData {
     totalSales: string
-    totalBids: number
+    totalBids: string | number
     totalVolume: string
-    activeUsers: number
-    joinedUsers: number
-    liveUsers: number
+    activeUsers: string | number
+    joinedUsers: string | number
+    liveUsers: string | number
     growth: {
         sales: string
         bids: string

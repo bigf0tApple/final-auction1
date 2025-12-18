@@ -30,6 +30,7 @@ import {
 import { SalesTrendChart, BidActivityChart, UserGrowthChart } from "../components/demo-charts"
 import ChatButton from "../components/chat-button"
 import MintFlowModal from "../components/mint-flow-modal"
+import { AdminAnalyticsCards, AdminChartModal, AdminChartsGrid, timeFrames } from "../components/admin"
 import { useClientAuctions } from "../hooks/use-client-auctions"
 import { useChatPinned } from "../hooks/use-chat-pinned"
 import type { AcceptedToken } from "../types/accepted-token"
@@ -1585,92 +1586,12 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
               </div>
             </div>
 
-            {/* Analytics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-black dark:text-white">Total Sales</CardTitle>
-                  <DollarSign
-                    className="h-4 w-4 text-black dark:text-white cursor-pointer hover:scale-110 transition-transform"
-                    onClick={() => openDetailedChart("sales")}
-                  />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-black dark:text-white">{analytics.totalSales}</div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{analytics.growth.sales} from last period</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-black dark:text-white">Total Bids</CardTitle>
-                  <Gavel
-                    className="h-4 w-4 text-black dark:text-white cursor-pointer hover:scale-110 transition-transform"
-                    onClick={() => openDetailedChart("bids")}
-                  />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-black dark:text-white">{analytics.totalBids}</div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{analytics.growth.bids} from last period</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-black dark:text-white">Total Volume</CardTitle>
-                  <TrendingUp
-                    className="h-4 w-4 text-black dark:text-white cursor-pointer hover:scale-110 transition-transform"
-                    onClick={() => openDetailedChart("volume")}
-                  />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-black dark:text-white">{analytics.totalVolume}</div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{analytics.growth.volume} from last period</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-black dark:text-white">Active Users</CardTitle>
-                  <Activity
-                    className="h-4 w-4 text-black dark:text-white cursor-pointer hover:scale-110 transition-transform"
-                    onClick={() => openDetailedChart("users")}
-                  />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-black dark:text-white">{analytics.activeUsers}</div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{analytics.growth.active} from last period</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-black dark:text-white">Joined Users</CardTitle>
-                  <UserPlus
-                    className="h-4 w-4 text-black dark:text-white cursor-pointer hover:scale-110 transition-transform"
-                    onClick={() => openDetailedChart("joined")}
-                  />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-black dark:text-white">{analytics.joinedUsers}</div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{analytics.growth.joined} from last period</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-black dark:text-white">Live Users</CardTitle>
-                  <Eye
-                    className="h-4 w-4 text-black dark:text-white cursor-pointer hover:scale-110 transition-transform"
-                    onClick={() => openDetailedChart("live")}
-                  />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-black dark:text-white">{analytics.liveUsers}</div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{analytics.growth.live}</p>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Analytics Cards - Now using extracted component */}
+            <AdminAnalyticsCards
+              analytics={analytics}
+              isDark={isDark}
+              onOpenDetailedChart={openDetailedChart}
+            />
 
             {/* Detailed Charts Section - NOW DYNAMIC */}
             <div className="space-y-6">
