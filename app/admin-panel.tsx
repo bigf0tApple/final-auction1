@@ -865,9 +865,9 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
 
           {/* Dynamic Chart based on type and timeframe */}
           <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-8 mb-4">
-            {chartType === "sales" && <SalesTrendChart isDark={isDark} timeFrame={modalTimeFrame} />}
+            {(chartType === "sales" || chartType === "volume") && <SalesTrendChart isDark={isDark} timeFrame={modalTimeFrame} />}
             {chartType === "bids" && <BidActivityChart isDark={isDark} timeFrame={modalTimeFrame} />}
-            {chartType === "users" && <UserGrowthChart isDark={isDark} timeFrame={modalTimeFrame} />}
+            {(chartType === "users" || chartType === "joined" || chartType === "live" || chartType === "active") && <UserGrowthChart isDark={isDark} timeFrame={modalTimeFrame} />}
           </div>
 
           {/* Chart Stats */}
@@ -1711,7 +1711,40 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
                   </CardContent>
                 </Card>
 
-                {/* Recent Auctions Table */}
+                {/* Platform Stats - NEW 4th Box */}
+                <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-black dark:text-white flex items-center">
+                      <Activity className="h-5 w-5 mr-2" />
+                      Platform Health
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className={isDark ? "text-gray-400" : "text-gray-600"}>Uptime</span>
+                        <span className={`font-bold ${isDark ? "text-green-400" : "text-green-600"}`}>99.9%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className={isDark ? "text-gray-400" : "text-gray-600"}>Avg Response</span>
+                        <span className={`font-bold ${isDark ? "text-white" : "text-black"}`}>142ms</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className={isDark ? "text-gray-400" : "text-gray-600"}>Active Sessions</span>
+                        <span className={`font-bold ${isDark ? "text-white" : "text-black"}`}>{analytics.liveUsers}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className={isDark ? "text-gray-400" : "text-gray-600"}>Chat Messages</span>
+                        <span className={`font-bold ${isDark ? "text-white" : "text-black"}`}>1,247</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className={isDark ? "text-gray-400" : "text-gray-600"}>Wallet Connects</span>
+                        <span className={`font-bold ${isDark ? "text-white" : "text-black"}`}>{analytics.activeUsers}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
                 <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl col-span-2">
                   <CardHeader>
                     <CardTitle className="text-black dark:text-white flex items-center">
