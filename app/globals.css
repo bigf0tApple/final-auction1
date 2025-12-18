@@ -1,0 +1,337 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 100%;
+    --muted-foreground: 0 0% 0%;
+    --accent: 0 0% 100%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 0 0% 0%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 0%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 0%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 0 0% 0%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 100%;
+    --input: 0 0% 100%;
+    --ring: 0 0% 100%;
+  }
+  
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .container {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .text-responsive {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+  
+  .spacing-responsive {
+    @apply p-3 sm:p-4 lg:p-6;
+  }
+  
+  .rounded-responsive {
+    @apply rounded-lg sm:rounded-xl lg:rounded-2xl;
+  }
+  
+  .transition-standard {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+  }
+}
+
+@layer components {
+  .card {
+    @apply border-border;
+  }
+  
+  .dark-mode-card {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #666;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* Custom date/time picker styling */
+input[type="date"],
+input[type="time"] {
+  color-scheme: light;
+  background: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.dark input[type="date"],
+.dark input[type="time"] {
+  color-scheme: dark;
+  background: #000000;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+input[type="date"]:focus,
+input[type="time"]:focus {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+.dark input[type="date"]:focus,
+.dark input[type="time"]:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+  background: transparent;
+}
+
+input[type="date"]::-webkit-datetime-edit,
+input[type="time"]::-webkit-datetime-edit {
+  color: #000000;
+}
+
+.dark input[type="date"]::-webkit-datetime-edit,
+.dark input[type="time"]::-webkit-datetime-edit {
+  color: #ffffff;
+}
+
+/* Chat banner sizing is handled inside the chat UI */
+
+/* Chat pinning styles - shift ONLY main content (not header) */
+.content-with-chat-left {
+  margin-left: 320px;
+}
+
+.content-with-chat-right {
+  margin-right: 320px;
+}
+
+/* Header positioning - move to left but keep normal behavior */
+header {
+  position: relative;
+  left: 0;
+  width: 100%;
+  z-index: 40; /* Below chat */
+}
+
+/* Popup positioning to avoid chat overlap */
+.modal-with-chat-left {
+  margin-left: 320px;
+}
+
+.modal-with-chat-right {
+  margin-right: 320px;
+}
+
+/* Force black background for dark theme chat */
+.dark .chat-container {
+  background-color: #000000 !important;
+}
+
+.dark .chat-container * {
+  background-color: inherit !important;
+}
+
+/* Mobile-specific fixes for touch devices */
+@media (max-width: 768px) {
+  /* Remove hover states on mobile to prevent sticky hover issues */
+  .mobile-no-hover:hover {
+    opacity: inherit !important;
+    background-color: inherit !important;
+    transform: none !important;
+  }
+  
+  /* Ensure Quick Bid buttons are properly touchable */
+  .quick-bid-button {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  /* Mobile bidding button optimizations */
+  .mobile-bid-button {
+    min-height: 48px; /* Minimum touch target size */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Remove hover effects on mobile for better UX */
+  button:hover,
+  .hover\:opacity-80:hover {
+    opacity: 1 !important;
+  }
+  
+  /* Use active states instead of hover on mobile */
+  button:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+  
+  /* Improve touch target sizes */
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Touch device detection and hover fixes */
+@media (hover: none) and (pointer: coarse) {
+  /* This targets touch devices specifically */
+  .hover\:bg-gray-100:hover,
+  .hover\:bg-gray-800:hover,
+  .hover\:opacity-80:hover,
+  .hover\:bg-blue-700:hover {
+    background-color: inherit !important;
+    opacity: inherit !important;
+  }
+  
+  /* Use active states for touch feedback */
+  button:active,
+  .active\:scale-95:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease-in-out;
+  }
+}
+
+/* Ensure mobile-friendly interaction states */
+@media (max-width: 767px) {
+  /* Quick Bid section mobile improvements */
+  .quick-bid-section {
+    padding: 12px 16px;
+  }
+  
+  .quick-bid-section button {
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  /* Mobile chat improvements */
+  .mobile-chat {
+    height: 100vh !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Mobile modal improvements */
+  .mobile-modal {
+    margin: 16px;
+    padding: 16px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+}
+
+/* ==========================================
+   COMPREHENSIVE HOVER EFFECT FIXES
+   ========================================== */
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* On touch devices, make hover states more accessible */
+  button:active,
+  .btn:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-in-out;
+  }
+  
+  /* Ensure touch targets are large enough */
+  button,
+  .btn,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Navigation and button transitions */
+nav button:hover,
+.navigation-item:hover,
+.modal button:hover,
+.dialog button:hover {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Accessibility: Ensure focus states are visible */
+*:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  button:hover {
+    border: 2px solid currentColor;
+  }
+}
