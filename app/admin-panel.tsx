@@ -824,83 +824,7 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
     setShowDetailedChart(chartType)
   }
 
-  const ChartModal = ({ chartType, onClose }: { chartType: string; onClose: () => void }) => {
-    const [modalTimeFrame, setModalTimeFrame] = useState("7d")
-
-    const getChartTitle = (type: string) => {
-      const titles = {
-        sales: "Sales Analytics",
-        bids: "Bidding Activity",
-        volume: "Trading Volume",
-        users: "User Activity",
-        joined: "User Growth",
-        live: "Live Users",
-      }
-      return titles[type as keyof typeof titles] || "Analytics"
-    }
-
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white dark:bg-[#000000] border border-black dark:border-white rounded-2xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-black dark:text-white">{getChartTitle(chartType)}</h3>
-            <Button
-              onClick={onClose}
-              variant="outline"
-              className="bg-white dark:bg-[#000000] border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white hover:border-white dark:hover:bg-white dark:hover:text-black dark:hover:border-black rounded-lg"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Time Frame Selector */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {timeFrames.map((frame) => (
-              <Button
-                key={frame.key}
-                onClick={() => setModalTimeFrame(frame.key)}
-                className={`${modalTimeFrame === frame.key
-                  ? "bg-[#000000] dark:bg-white text-white dark:text-[#000000]"
-                  : "bg-white dark:bg-[#000000] text-black dark:text-white border border-black dark:border-white"
-                  } rounded-lg text-sm px-3 py-1`}
-              >
-                {frame.label}
-              </Button>
-            ))}
-          </div>
-
-          {/* Dynamic Chart based on type and timeframe */}
-          <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-8 mb-4">
-            {(chartType === "sales" || chartType === "volume") && <SalesTrendChart isDark={isDark} timeFrame={modalTimeFrame} />}
-            {chartType === "bids" && <BidActivityChart isDark={isDark} timeFrame={modalTimeFrame} />}
-            {(chartType === "users" || chartType === "joined" || chartType === "live" || chartType === "active") && <UserGrowthChart isDark={isDark} timeFrame={modalTimeFrame} />}
-          </div>
-
-          {/* Chart Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-              <div className="text-lg font-bold text-black dark:text-white">
-                {getAnalyticsData(modalTimeFrame).totalSales}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Peak Value</div>
-            </div>
-            <div className="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-              <div className="text-lg font-bold text-black dark:text-white">+{Math.floor(Math.random() * 30)}%</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Growth</div>
-            </div>
-            <div className="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-              <div className="text-lg font-bold text-black dark:text-white">{Math.floor(Math.random() * 100)}%</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Trend</div>
-            </div>
-            <div className="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-              <div className="text-lg font-bold text-black dark:text-white">{Math.floor(Math.random() * 50)}%</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Volatility</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // ChartModal removed - now using imported AdminChartModal
 
   const MintConfirmationModal = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -1896,7 +1820,14 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
       </div>
 
       {/* Chart Modal */}
-      {showDetailedChart && <ChartModal chartType={showDetailedChart} onClose={() => setShowDetailedChart(null)} />}
+      {showDetailedChart && (
+        <AdminChartModal
+          chartType={showDetailedChart}
+          isDark={isDark}
+          onClose={() => setShowDetailedChart(null)}
+          getAnalyticsData={getAnalyticsData}
+        />
+      )}
 
       {/* Mint Confirmation Modal */}
       {showMintConfirmation && <MintConfirmationModal />}
