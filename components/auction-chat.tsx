@@ -10,6 +10,7 @@ import MentionInput, { renderMessageWithMentions } from "./mention-input"
 import { useAuction } from "./auction-context"
 import { DEFAULT_ACCEPTED_TOKEN, type AcceptedToken } from "../types/accepted-token"
 import { placeBidOnChain, CONTRACTS } from "../lib/contracts"
+import { sanitizeChatMessage, sanitizeUsername } from "../lib/sanitize"
 import {
   getAuctionChat,
   sendChatMessage,
@@ -328,9 +329,13 @@ export default function AuctionChat({
       return
     }
 
+    // Sanitize inputs before sending (XSS prevention)
+    const sanitizedMessage = sanitizeChatMessage(inputMessage.trim())
+    const sanitizedDisplayName = sanitizeUsername(displayName)
+
     // If Supabase is connected, send to DB and let subscription handle UI
     if (isSupabaseConnected && activeAuctionId) {
-      sendChatMessage(activeAuctionId, connectedWallet, displayName, inputMessage.trim())
+      sendChatMessage(activeAuctionId, connectedWallet, sanitizedDisplayName, sanitizedMessage)
         .catch(err => {
           const errorMessage: Message = {
             id: Date.now().toString(),
@@ -346,11 +351,11 @@ export default function AuctionChat({
       return
     }
 
-    // Fallback: Local handling
+    // Fallback: Local handling (also sanitized)
     const newMessage: Message = {
       id: Date.now().toString(),
-      user: displayName,
-      message: inputMessage.trim(),
+      user: sanitizedDisplayName,
+      message: sanitizedMessage,
       timestamp: new Date(),
       userBadge: userBadgeInfo.badge,
       badgeColor: userBadgeInfo.color,

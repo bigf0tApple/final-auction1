@@ -150,12 +150,51 @@ export function getNFTContract(signerOrProvider: ethers.Signer | ethers.provider
 // ============ Auction Functions ============
 
 /**
+ * Validate bid amount before sending to contract
+ * @param bidAmount Amount in ETH as string
+ * @throws Error if validation fails
+ */
+function validateBidAmount(bidAmount: string): void {
+    // Check it's a valid number
+    const amount = parseFloat(bidAmount)
+    if (isNaN(amount)) {
+        throw new Error('Invalid bid amount: not a number')
+    }
+
+    // Check it's positive
+    if (amount <= 0) {
+        throw new Error('Invalid bid amount: must be positive')
+    }
+
+    // Check reasonable upper bound (100 ETH max per bid)
+    if (amount > 100) {
+        throw new Error('Invalid bid amount: exceeds maximum (100 ETH)')
+    }
+
+    // Check reasonable precision (max 18 decimals for ETH)
+    const parts = bidAmount.split('.')
+    if (parts[1] && parts[1].length > 18) {
+        throw new Error('Invalid bid amount: too many decimal places')
+    }
+}
+
+/**
  * Place a bid on an auction
+ * @param auctionId The auction to bid on
+ * @param bidAmount Amount in ETH (validated before sending)
  */
 export async function placeBidOnChain(
     auctionId: number,
     bidAmount: string // In ETH
 ): Promise<{ hash: string; wait: () => Promise<ethers.providers.TransactionReceipt> }> {
+    // Validate auction ID
+    if (!Number.isInteger(auctionId) || auctionId < 0) {
+        throw new Error('Invalid auction ID')
+    }
+
+    // Validate bid amount (security: prevent malformed inputs)
+    validateBidAmount(bidAmount)
+
     const signer = await getSigner()
     if (!signer) throw new Error('No wallet connected')
 
