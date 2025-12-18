@@ -372,6 +372,22 @@ export default function AuctionChat({
     try {
       const bidAmount = bidType === "min" ? getMinBid() : getMaxBid()
 
+      // Demo mode - allow bidding without contract
+      if (!CONTRACTS.auctionHouse) {
+        placeBid(bidAmount, connectedWallet)
+        const demoMessage: Message = {
+          id: Date.now().toString(),
+          user: "System",
+          message: `🎮 Demo bid placed: ${bidAmount.toFixed(4)} ${acceptedToken.symbol}`,
+          timestamp: new Date(),
+          userBadge: "System",
+          badgeColor: "bg-green-500",
+        }
+        setMessages((prev) => [...prev, demoMessage])
+        return
+      }
+
+      // Real mode - require auction ID
       if (!activeAuctionId) {
         throw new Error("No active auction")
       }
@@ -387,26 +403,8 @@ export default function AuctionChat({
       }
       setMessages((prev) => [...prev, pendingMessage])
 
-      setMessages((prev) => [...prev, pendingMessage])
-
         ; (async () => {
           try {
-            // Check if contracts are configured
-            if (!CONTRACTS.auctionHouse) {
-              // Demo mode
-              placeBid(bidAmount, connectedWallet)
-              const demoMessage: Message = {
-                id: Date.now().toString(),
-                user: "System",
-                message: `Demo bid placed: ${bidAmount.toFixed(4)} ${acceptedToken.symbol} (No contract)`,
-                timestamp: new Date(),
-                userBadge: "System",
-                badgeColor: "bg-green-500",
-              }
-              setMessages((prev) => [...prev, demoMessage])
-              return
-            }
-
             if (typeof window === "undefined" || !window.ethereum) throw new Error("No wallet provider found")
 
             // Get auction ID (must be passed from props or context)
