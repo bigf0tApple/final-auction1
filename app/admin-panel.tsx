@@ -31,6 +31,7 @@ import { SalesTrendChart, BidActivityChart, UserGrowthChart } from "../component
 import ChatButton from "../components/chat-button"
 import MintFlowModal from "../components/mint-flow-modal"
 import { useClientAuctions } from "../hooks/use-client-auctions"
+import { useChatPinned } from "../hooks/use-chat-pinned"
 import type { AcceptedToken } from "../types/accepted-token"
 import { createAuction, checkSupabaseConnection } from "../lib/supabase"
 
@@ -107,6 +108,10 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedTimeFrame, setSelectedTimeFrame] = useState("7d")
   const [showDetailedChart, setShowDetailedChart] = useState<string | null>(null)
+
+  // Chat pinning for layout compensation
+  const { isChatPinnedLeft, isChatPinnedRight } = useChatPinned()
+  const contentShiftClass = isChatPinnedLeft ? "content-with-chat-left" : isChatPinnedRight ? "content-with-chat-right" : ""
 
   const [newBlockedWord, setNewBlockedWord] = useState("")
   const [blockedWords, setBlockedWords] = useState<string[]>([])
@@ -991,7 +996,7 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
   }, [isDark])
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "dark bg-[#000000]" : "bg-white"}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "dark bg-[#000000]" : "bg-white"} ${contentShiftClass}`}>
       {/* Header */}
       <header className="border-b border-gray-300 dark:border-white bg-white dark:bg-[#000000]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
