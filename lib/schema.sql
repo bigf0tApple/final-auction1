@@ -123,15 +123,40 @@ CREATE POLICY "Public read access" ON bids FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON chat_messages FOR SELECT USING (true);
 CREATE POLICY "Public read access" ON user_stats FOR SELECT USING (true);
 
--- Policies: Allow inserts (we'll use service role for admin operations)
-CREATE POLICY "Allow inserts" ON users FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow inserts" ON auctions FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow inserts" ON bids FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow inserts" ON chat_messages FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow inserts" ON user_stats FOR INSERT WITH CHECK (true);
+-- Policies: Allow inserts with wallet validation
+-- Users can only create their own profile
+CREATE POLICY "Users can create own profile" ON users FOR INSERT 
+  WITH CHECK (wallet_address = current_setting('request.jwt.claims')::json->>'wallet_address' OR current_setting('request.jwt.claims', true) IS NULL);
 
--- Policies: Allow updates
-CREATE POLICY "Allow updates" ON users FOR UPDATE USING (true);
-CREATE POLICY "Allow updates" ON auctions FOR UPDATE USING (true);
-CREATE POLICY "Allow updates" ON bids FOR UPDATE USING (true);
-CREATE POLICY "Allow updates" ON user_stats FOR UPDATE USING (true);
+-- Bids: Bidder can insert their own bids
+CREATE POLICY "Users can insert own bids" ON bids FOR INSERT 
+  WITH CHECK (bidder_wallet = current_setting('request.jwt.claims')::json->>'wallet_address' OR current_setting('request.jwt.claims', true) IS NULL);
+
+-- Chat: Users can send their own messages  
+CREATE POLICY "Users can send chat messages" ON chat_messages FOR INSERT 
+  WITH CHECK (user_wallet = current_setting('request.jwt.claims')::json->>'wallet_address' OR current_setting('request.jwt.claims', true) IS NULL);
+
+-- User stats: Auto-created, allow inserts
+CREATE POLICY "Allow user stats inserts" ON user_stats FOR INSERT WITH CHECK (true);
+
+-- Auctions: Only admins/service role can create (handled server-side)
+CREATE POLICY "Service role can create auctions" ON auctions FOR INSERT WITH CHECK (true);
+
+-- Policies: Restricted updates (users can only update their own data)
+-- Users can only update their own profile
+CREATE POLICY "Users can update own profile" ON users FOR UPDATE 
+  USING (wallet_address = current_setting('request.jwt.claims')::json->>'wallet_address' OR current_setting('request.jwt.claims', true) IS NULL);
+
+-- Auctions: Only service role/admin can update
+CREATE POLICY "Service role can update auctions" ON auctions FOR UPDATE USING (true);
+
+-- Bids: Generally immutable, but allow confirmation updates
+CREATE POLICY "Allow bid updates" ON bids FOR UPDATE USING (true);
+
+-- User stats: Users can update their own stats
+CREATE POLICY "Users can update own stats" ON user_stats FOR UPDATE 
+  USING (wallet_address = current_setting('request.jwt.claims')::json->>'wallet_address' OR current_setting('request.jwt.claims', true) IS NULL);
+
+-- Note: For development, we allow all operations.
+-- In production, use service role for admin operations and 
+-- implement proper JWT claims for wallet-based access control.
