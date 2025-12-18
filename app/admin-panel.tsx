@@ -39,7 +39,9 @@ import {
   mockUsers as initialMockUsers,
   mockBlacklistedUsers as initialBlacklistedUsers,
   mockChatHistory,
-  defaultBlockedWords
+  defaultBlockedWords,
+  AdminMintConfirmationModal,
+  exportChatHistoryToCSV
 } from "../components/admin"
 import { useClientAuctions } from "../hooks/use-client-auctions"
 import { useChatPinned } from "../hooks/use-chat-pinned"
@@ -535,138 +537,9 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
     setSelectedChatDay({ date, dayName })
   }
 
+  // Use imported export function (removed 130+ lines)
   const exportSelectedHistory = () => {
-    if (selectedHistoryDays.length === 0) {
-      alert("Please select days to export")
-      return
-    }
-
-    // Generate comprehensive CSV data for selected days
-    const csvHeaders = [
-      "Date",
-      "Day_Name",
-      "User_Address",
-      "Username",
-      "Message",
-      "Timestamp",
-      "User_Badge",
-      "Message_Type",
-      "Warning_Level",
-      "Action_Taken",
-      "IP_Address",
-      "Session_ID"
-    ]
-
-    const csvRows = selectedHistoryDays.flatMap((date) => {
-      // Find the day data
-      const dayData = chatHistory.find(day => day.date === date)
-      if (!dayData) return []
-
-      // Generate sample messages for the selected day
-      const messages = [
-        {
-          date,
-          dayName: dayData.dayName,
-          userAddress: "0x1234...5678",
-          username: "CryptoArt_Fan",
-          message: "This artwork is absolutely stunning! Love the neon aesthetic.",
-          timestamp: "08:15:30",
-          userBadge: "Eager Bidder",
-          messageType: "normal",
-          warningLevel: "0",
-          actionTaken: "none",
-          ipAddress: "192.168.1.100",
-          sessionId: "sess_abc123"
-        },
-        {
-          date,
-          dayName: dayData.dayName,
-          userAddress: "artlover.eth",
-          username: "Digital_Dreams",
-          message: "When does the bidding end? Want to place my final bid.",
-          timestamp: "10:22:45",
-          userBadge: "Pro Bidder",
-          messageType: "normal",
-          warningLevel: "0",
-          actionTaken: "none",
-          ipAddress: "10.0.0.25",
-          sessionId: "sess_def456"
-        },
-        {
-          date,
-          dayName: dayData.dayName,
-          userAddress: "0x9876...4321",
-          username: "Spam_User",
-          message: "Check out my private key sharing site!",
-          timestamp: "14:10:15",
-          userBadge: "New Bidder",
-          messageType: "flagged",
-          warningLevel: "3",
-          actionTaken: "banned_24h",
-          ipAddress: "203.45.67.89",
-          sessionId: "sess_ghi789"
-        },
-        {
-          date,
-          dayName: dayData.dayName,
-          userAddress: "0x5555...9999",
-          username: "Whale_Collector",
-          message: "Placing MAX PAIN - going all in on this one!",
-          timestamp: "16:35:20",
-          userBadge: "Legendary Bidder",
-          messageType: "max_pain",
-          warningLevel: "0",
-          actionTaken: "none",
-          ipAddress: "172.16.0.10",
-          sessionId: "sess_jkl012"
-        },
-        {
-          date,
-          dayName: dayData.dayName,
-          userAddress: "0x7777...3333",
-          username: "Profanity_User",
-          message: "This is fucking amazing art!",
-          timestamp: "18:45:10",
-          userBadge: "Active Bidder",
-          messageType: "warning",
-          warningLevel: "1",
-          actionTaken: "warned",
-          ipAddress: "192.168.50.75",
-          sessionId: "sess_mno345"
-        }
-      ]
-
-      return messages.map(msg => [
-        msg.date,
-        msg.dayName,
-        msg.userAddress,
-        msg.username,
-        `"${msg.message.replace(/"/g, '""')}"`, // Escape quotes in CSV
-        msg.timestamp,
-        msg.userBadge,
-        msg.messageType,
-        msg.warningLevel,
-        msg.actionTaken,
-        msg.ipAddress,
-        msg.sessionId
-      ].join(","))
-    })
-
-    const csvContent = [csvHeaders.join(","), ...csvRows].join("\n")
-
-    // Create and download the file
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `ARPO_Chat_Export_${selectedHistoryDays.length}_Days_${new Date().toISOString().split("T")[0]}.csv`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
-
-    // Show success message
-    alert(`Successfully exported chat history for ${selectedHistoryDays.length} selected days to CSV file.`)
+    exportChatHistoryToCSV(selectedHistoryDays, chatHistory)
   }
 
   const unblacklistUser = (userAddress: string) => {
@@ -701,66 +574,7 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
   }
 
   // ChartModal removed - now using imported AdminChartModal
-
-  const MintConfirmationModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-[#000000] border border-black dark:border-white rounded-2xl p-6 max-w-md w-full mx-4">
-        <h3 className="text-xl font-bold text-black dark:text-white mb-4">Confirm Mint</h3>
-        <div className="space-y-3 mb-6">
-          <div>
-            <span className="text-sm text-gray-600 dark:text-gray-400">Title:</span>
-            <p className="font-semibold text-black dark:text-white">{mintForm.title}</p>
-          </div>
-          <div>
-            <span className="text-sm text-gray-600 dark:text-gray-400">Artist:</span>
-            <p className="font-semibold text-black dark:text-white">{mintForm.artistName}</p>
-          </div>
-          <div>
-            <span className="text-sm text-gray-600 dark:text-gray-400">Starting Price:</span>
-            <p className="font-semibold text-black dark:text-white">{mintForm.startingPrice} {formatTokenLabel()}</p>
-          </div>
-          <div>
-            <span className="text-sm text-gray-600 dark:text-gray-400">Accepted Token:</span>
-            <p className="font-semibold text-black dark:text-white">
-              {formatTokenLabel()}
-              {mintForm.acceptedTokenMode === "CUSTOM" && mintForm.customTokenAddress.trim() ? (
-                <span className="block font-mono text-xs text-gray-600 dark:text-gray-400">{mintForm.customTokenAddress.trim()}</span>
-              ) : null}
-            </p>
-          </div>
-          <div>
-            <span className="text-sm text-gray-600 dark:text-gray-400">Royalty:</span>
-            <p className="font-semibold text-black dark:text-white">{mintForm.royaltyPercent}%</p>
-          </div>
-          <div>
-            <span className="text-sm text-gray-600 dark:text-gray-400">Auction Start:</span>
-            <p className="font-semibold text-black dark:text-white">
-              {mintForm.auctionDate} at {mintForm.auctionTime}
-            </p>
-          </div>
-          <div>
-            <span className="text-sm text-gray-600 dark:text-gray-400">On-chain Recipient:</span>
-            <p className="font-semibold text-black dark:text-white font-mono text-xs break-all">{mintForm.auctionContractAddress || "-"}</p>
-          </div>
-        </div>
-        <div className="flex space-x-3">
-          <Button
-            onClick={() => setShowMintConfirmation(false)}
-            variant="outline"
-            className="flex-1 bg-white dark:bg-[#000000] border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black rounded-lg"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={confirmMint}
-            className="flex-1 bg-[#000000] dark:bg-white text-white dark:text-[#000000] border-2 border-white dark:border-black hover:bg-white hover:text-black hover:border-black dark:hover:bg-black dark:hover:text-white dark:hover:border-white rounded-lg"
-          >
-            Confirm Mint
-          </Button>
-        </div>
-      </div>
-    </div>
-  )
+  // MintConfirmationModal removed - now using imported AdminMintConfirmationModal
 
   // Add this useEffect to inject custom CSS
   useEffect(() => {
@@ -1706,7 +1520,14 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
       )}
 
       {/* Mint Confirmation Modal */}
-      {showMintConfirmation && <MintConfirmationModal />}
+      {showMintConfirmation && (
+        <AdminMintConfirmationModal
+          mintForm={mintForm}
+          formatTokenLabel={formatTokenLabel}
+          onCancel={() => setShowMintConfirmation(false)}
+          onConfirm={confirmMint}
+        />
+      )}
       {selectedChatDay && (
         <ChatDayModal
           date={selectedChatDay.date}
