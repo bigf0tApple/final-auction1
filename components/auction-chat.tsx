@@ -137,8 +137,34 @@ export default function AuctionChat({
   }, [activeAuctionId, isSupabaseConnected])
 
 
-  // Mock user bid count for badge calculation
-  const userBidCount = 15 // This would come from your user data
+  // Track user bids - count from bid history or session
+  const [userBidCount, setUserBidCount] = useState(() => {
+    // Try to load from localStorage
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(`bidCount_${connectedWallet}`)
+      return stored ? parseInt(stored, 10) : 0
+    }
+    return 0
+  })
+
+  // Update bid count when user places bid - load from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined' && connectedWallet) {
+      const stored = localStorage.getItem(`bidCount_${connectedWallet}`)
+      if (stored) {
+        setUserBidCount(parseInt(stored, 10))
+      }
+    }
+  }, [connectedWallet])
+
+  // Function to increment bid count
+  const incrementBidCount = () => {
+    const newCount = userBidCount + 1
+    setUserBidCount(newCount)
+    if (typeof window !== 'undefined' && connectedWallet) {
+      localStorage.setItem(`bidCount_${connectedWallet}`, newCount.toString())
+    }
+  }
 
   const getUserBadge = (bidCount: number) => {
     if (bidCount >= 50)
@@ -375,6 +401,7 @@ export default function AuctionChat({
       // Demo mode - allow bidding without contract
       if (!CONTRACTS.auctionHouse) {
         placeBid(bidAmount, connectedWallet)
+        incrementBidCount() // Track bid for tier progression
         const demoMessage: Message = {
           id: Date.now().toString(),
           user: "System",
