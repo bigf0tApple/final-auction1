@@ -121,7 +121,7 @@ export function AdminChartModal({
 interface AdminChartsGridProps {
     isDark: boolean
     selectedTimeFrame: string
-    analytics: { liveUsers: number; activeUsers: number }
+    analytics: { liveUsers: string | number; activeUsers: string | number }
 }
 
 /**
