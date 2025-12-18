@@ -12,6 +12,12 @@ import { DEFAULT_ACCEPTED_TOKEN, type AcceptedToken } from "../types/accepted-to
 import { placeBidOnChain, CONTRACTS } from "../lib/contracts"
 import { sanitizeChatMessage, sanitizeUsername } from "../lib/sanitize"
 import {
+  createSystemMessage,
+  getUserBadgeForBidCount,
+  formatChatTimestamp,
+  RATE_LIMIT
+} from "../lib/chat-utils"
+import {
   getAuctionChat,
   sendChatMessage,
   subscribeToChatMessages,
