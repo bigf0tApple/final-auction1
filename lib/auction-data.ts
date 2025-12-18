@@ -31,55 +31,55 @@ const now = new Date()
 const minutesFromNow = (mins: number) => new Date(now.getTime() + mins * 60 * 1000)
 
 const upcomingAuctionsRaw: Omit<AuctionEvent, "acceptedToken">[] = [
-  // 🔴 LIVE TEST AUCTION #1 - Starts immediately, ends in 5 minutes
+  // 🔴 LIVE TEST AUCTION #1 - 3 minute auction
   {
     id: 900,
     title: "⚡ Quick Test #1",
     artist: "TestCrew",
     startTime: minutesFromNow(-1), // Started 1 min ago
-    endTime: minutesFromNow(4), // Ends in 4 mins
+    endTime: minutesFromNow(2), // Ends in 2 mins (3 min total)
     startingBid: "0.01 ETH",
     status: "live" as const,
-    description: "5 minute test auction - bid now!",
+    description: "3 minute test auction - bid now!",
     category: "Test",
     royaltyPercent: 10
   },
-  // 🟡 NEXT UP - Starts in 5 mins, ends in 10 mins  
+  // 🟡 NEXT UP - Starts at 3 mins, ends at 6 mins
   {
     id: 901,
     title: "⚡ Quick Test #2",
     artist: "TestCrew",
-    startTime: minutesFromNow(5),
-    endTime: minutesFromNow(10),
+    startTime: minutesFromNow(3),
+    endTime: minutesFromNow(6),
     startingBid: "0.02 ETH",
     status: "upcoming" as const,
-    description: "Second 5-minute test auction",
+    description: "Second 3-minute test auction",
     category: "Test",
     royaltyPercent: 10
   },
-  // 🟢 THIRD - Starts in 10 mins, ends in 15 mins
+  // 🟢 THIRD - Starts at 6 mins, ends at 9 mins
   {
     id: 902,
     title: "⚡ Quick Test #3",
     artist: "TestCrew",
-    startTime: minutesFromNow(10),
-    endTime: minutesFromNow(15),
+    startTime: minutesFromNow(6),
+    endTime: minutesFromNow(9),
     startingBid: "0.03 ETH",
     status: "upcoming" as const,
-    description: "Third 5-minute test auction",
+    description: "Third 3-minute test auction",
     category: "Test",
     royaltyPercent: 10
   },
-  // 🔵 FOURTH - Starts in 15 mins
+  // 🔵 FOURTH - Starts at 9 mins, ends at 12 mins
   {
     id: 903,
     title: "⚡ Quick Test #4",
     artist: "TestCrew",
-    startTime: minutesFromNow(15),
-    endTime: minutesFromNow(20),
+    startTime: minutesFromNow(9),
+    endTime: minutesFromNow(12),
     startingBid: "0.01 ETH",
     status: "upcoming" as const,
-    description: "Fourth 5-minute test auction",
+    description: "Fourth 3-minute test auction",
     category: "Test",
     royaltyPercent: 10
   },

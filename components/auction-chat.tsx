@@ -603,12 +603,12 @@ export default function AuctionChat({
                       </button>
                       <button
                         onClick={() => {
-                          setIsPinned(false)
                           setShowPinDropdown(false)
+                          onClose()
                         }}
-                        className={`w-full text-left px-3 py-2 text-sm hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black ${isDark ? "text-white" : "text-black"}`}
+                        className={`w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-500 hover:text-white`}
                       >
-                        Unpin
+                        Close Chat
                       </button>
                     </div>
                   )}

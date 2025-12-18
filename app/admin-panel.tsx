@@ -1544,18 +1544,12 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
                 </div>
 
                 {/* Mint Button */}
-                <div className="pt-4 space-y-3">
-                  <Button
-                    onClick={() => setShowMintFlow(true)}
-                    className="w-full bg-white dark:bg-[#000000] text-black dark:text-white border-2 border-black dark:border-white hover:bg-black hover:text-white hover:border-white dark:hover:bg-white dark:hover:text-black rounded-lg py-3 text-lg font-semibold"
-                  >
-                    ✨ Use New Mint Flow (Recommended)
-                  </Button>
+                <div className="pt-4">
                   <Button
                     onClick={handleMintSubmit}
                     className="w-full bg-[#000000] dark:bg-white text-white dark:text-[#000000] border-2 border-white dark:border-black hover:bg-white hover:text-black hover:border-black dark:hover:bg-black dark:hover:text-white dark:hover:border-white rounded-lg py-3 text-lg font-semibold"
                   >
-                    MINT NOW (Legacy)
+                    ✨ MINT AUCTION
                   </Button>
                 </div>
               </CardContent>

@@ -3,6 +3,7 @@
 import React from 'react'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useChatPinned } from '@/hooks/use-chat-pinned'
 
 interface TermsPageProps {
   onClose: () => void
@@ -10,8 +11,11 @@ interface TermsPageProps {
 }
 
 export default function TermsPage({ onClose, isDark }: TermsPageProps) {
+  const { isChatPinnedLeft, isChatPinnedRight } = useChatPinned()
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 ${isChatPinnedLeft ? 'modal-with-chat-left' : isChatPinnedRight ? 'modal-with-chat-right' : ''
+      }`}>
       <div className={`${isDark ? 'bg-black text-white border-white' : 'bg-white text-black border-black'} border rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col`}>
         {/* Header */}
         <div className={`flex justify-between items-center p-4 sm:p-6 border-b ${isDark ? 'border-white' : 'border-black'}`}>
