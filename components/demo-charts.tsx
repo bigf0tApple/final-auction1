@@ -1,11 +1,11 @@
 "use client"
 
+import { memo, useMemo } from "react"
 import {
   LineChart,
   Line,
   BarChart,
   Bar,
-
   XAxis,
   YAxis,
   CartesianGrid,
@@ -196,8 +196,8 @@ interface DemoChartsProps {
   timeFrame: string
 }
 
-export function SalesTrendChart({ isDark, timeFrame }: DemoChartsProps) {
-  const salesData = generateSalesData(timeFrame)
+export const SalesTrendChart = memo(function SalesTrendChart({ isDark, timeFrame }: DemoChartsProps) {
+  const salesData = useMemo(() => generateSalesData(timeFrame), [timeFrame])
 
   return (
     <ResponsiveContainer width="100%" height={200}>
@@ -223,10 +223,10 @@ export function SalesTrendChart({ isDark, timeFrame }: DemoChartsProps) {
       </LineChart>
     </ResponsiveContainer>
   )
-}
+})
 
-export function BidActivityChart({ isDark, timeFrame }: DemoChartsProps) {
-  const bidData = generateBidData(timeFrame)
+export const BidActivityChart = memo(function BidActivityChart({ isDark, timeFrame }: DemoChartsProps) {
+  const bidData = useMemo(() => generateBidData(timeFrame), [timeFrame])
 
   return (
     <ResponsiveContainer width="100%" height={200}>
@@ -246,10 +246,10 @@ export function BidActivityChart({ isDark, timeFrame }: DemoChartsProps) {
       </BarChart>
     </ResponsiveContainer>
   )
-}
+})
 
-export function UserGrowthChart({ isDark, timeFrame }: DemoChartsProps) {
-  const userGrowthData = generateUserGrowthData(timeFrame)
+export const UserGrowthChart = memo(function UserGrowthChart({ isDark, timeFrame }: DemoChartsProps) {
+  const userGrowthData = useMemo(() => generateUserGrowthData(timeFrame), [timeFrame])
 
   return (
     <ResponsiveContainer width="100%" height={200}>
@@ -275,6 +275,6 @@ export function UserGrowthChart({ isDark, timeFrame }: DemoChartsProps) {
       </LineChart>
     </ResponsiveContainer>
   )
-}
+})
 
 
