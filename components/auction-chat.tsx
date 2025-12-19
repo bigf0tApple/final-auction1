@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect, useCallback, memo, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { X, HelpCircle, Send, ChevronDown, Pin, ArrowDown, User, AtSign } from "lucide-react"
 import ChatRules from "./chat-rules"
@@ -46,6 +46,45 @@ interface AuctionChatProps {
   acceptedToken?: AcceptedToken
   onchainRecipientAddress?: string
 }
+
+// Memoized individual message component for performance
+interface ChatMessageItemProps {
+  msg: Message
+  isDark: boolean
+  onUsernameClick: (user: string, event: React.MouseEvent) => void
+  formatTimestamp: (date: Date) => string
+}
+
+const ChatMessageItem = memo(function ChatMessageItem({
+  msg,
+  isDark,
+  onUsernameClick,
+  formatTimestamp,
+}: ChatMessageItemProps) {
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <span
+            onClick={(e) => onUsernameClick(msg.user, e)}
+            className={`text-sm font-medium px-2 py-1 rounded-full cursor-pointer transition-all ${msg.badgeColor.includes("border")
+              ? `${msg.badgeColor} ${isDark ? "text-white bg-transparent hover:bg-white/10" : "text-black bg-transparent hover:bg-black/10"}`
+              : `${msg.badgeColor} text-white hover:opacity-80`
+              } ${msg.user !== "System" ? "cursor-pointer" : ""}`}
+          >
+            {msg.user}
+          </span>
+        </div>
+        <span className={`text-xs ${isDark ? "text-gray-500" : "text-gray-400"}`}>
+          {formatTimestamp(msg.timestamp)}
+        </span>
+      </div>
+      <p className={`text-sm ${isDark ? "text-white" : "text-black"}`}>
+        {renderMessageWithMentions(msg.message, isDark)}
+      </p>
+    </div>
+  )
+})
 
 export default function AuctionChat({
   displayName,
@@ -563,21 +602,22 @@ export default function AuctionChat({
     setShowScrollButton(!isNearBottom)
   }, [])
 
-  // User dropdown handlers
-  const handleUsernameClick = (user: string, event: React.MouseEvent) => {
+  // User dropdown handlers - memoized for ChatMessageItem performance
+  const handleUsernameClick = useCallback((user: string, event: React.MouseEvent) => {
     if (user === "System") return
     const rect = (event.target as HTMLElement).getBoundingClientRect()
     setUserDropdown({ user, x: rect.left, y: rect.bottom + 5 })
-  }
+  }, [])
 
   const handleMentionUser = (username: string) => {
     setInputMessage(prev => `${prev}@${username} `)
     setUserDropdown(null)
   }
 
-  const formatTimestamp = (date: Date) => {
+  // Memoized formatter for ChatMessageItem
+  const formatTimestamp = useCallback((date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  }
+  }, [])
 
 
   const chatClasses =
@@ -682,27 +722,13 @@ export default function AuctionChat({
             ) : (
               <div className="space-y-3">
                 {messages.map((msg) => (
-                  <div key={`${msg.id}-${msg.timestamp.getTime()}`} className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span
-                          onClick={(e) => handleUsernameClick(msg.user, e)}
-                          className={`text-sm font-medium px-2 py-1 rounded-full cursor-pointer transition-all ${msg.badgeColor.includes("border")
-                            ? `${msg.badgeColor} ${isDark ? "text-white bg-transparent hover:bg-white/10" : "text-black bg-transparent hover:bg-black/10"}`
-                            : `${msg.badgeColor} text-white hover:opacity-80`
-                            } ${msg.user !== "System" ? "cursor-pointer" : ""}`}
-                        >
-                          {msg.user}
-                        </span>
-                      </div>
-                      <span className={`text-xs ${isDark ? "text-gray-500" : "text-gray-400"}`}>
-                        {formatTimestamp(msg.timestamp)}
-                      </span>
-                    </div>
-                    <p className={`text-sm ${isDark ? "text-white" : "text-black"}`}>
-                      {renderMessageWithMentions(msg.message, isDark)}
-                    </p>
-                  </div>
+                  <ChatMessageItem
+                    key={`${msg.id}-${msg.timestamp.getTime()}`}
+                    msg={msg}
+                    isDark={isDark}
+                    onUsernameClick={handleUsernameClick}
+                    formatTimestamp={formatTimestamp}
+                  />
                 ))}
                 <div ref={messagesEndRef} />
               </div>
