@@ -1,6 +1,6 @@
 # ARPO Studio - Task Tracker
 
-**Updated:** December 19, 2025  
+**Updated:** December 19, 2025 (18:15 UTC+8)  
 **Version:** V4 (Extensible Hooks)
 
 ---
