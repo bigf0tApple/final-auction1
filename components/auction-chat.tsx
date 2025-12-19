@@ -622,10 +622,10 @@ export default function AuctionChat({
 
   const chatClasses =
     isFullScreen && isMobile
-      ? "fixed inset-0 z-50"
+      ? "fixed inset-0 z-40"
       : isPinned
-        ? `fixed top-16 ${pinnedSide}-0 bottom-0 z-50 w-80`
-        : "fixed bottom-4 right-4 z-50 w-80"
+        ? `fixed top-16 ${pinnedSide}-0 bottom-0 z-40 w-80`
+        : "fixed bottom-4 right-4 z-40 w-80"
 
   const chatHeight = isFullScreen && isMobile ? "h-full" : isPinned ? "h-[calc(100vh-64px-128px-8px)]" : "h-[372px]"
 
@@ -751,7 +751,7 @@ export default function AuctionChat({
           {/* User Dropdown */}
           {userDropdown && (
             <div
-              className={`fixed z-50 rounded-lg shadow-lg border-2 overflow-hidden ${isDark ? "bg-black border-white" : "bg-white border-black"
+              className={`fixed z-[45] rounded-lg shadow-lg border-2 overflow-hidden ${isDark ? "bg-black border-white" : "bg-white border-black"
                 }`}
               style={{ left: userDropdown.x, top: userDropdown.y }}
             >
