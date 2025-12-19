@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { X, Eye, Download, Trash2 } from "lucide-react"
+import { Search } from "lucide-react"
 
 interface ChatHistoryDay {
     date: string
@@ -13,6 +13,15 @@ interface ChatHistoryDay {
     messageCount: number
     activeUsers: number
     warnings: number
+}
+
+interface ModerationRecord {
+    id: number
+    userAddress: string
+    action: string
+    reason: string
+    date: string
+    status: string
 }
 
 interface AdminChatTabProps {
@@ -28,10 +37,11 @@ interface AdminChatTabProps {
     deleteSelectedHistory: () => void
     exportSelectedHistory: () => void
     viewDayHistory: (date: string, dayName: string) => void
+    moderationHistory: ModerationRecord[]
+    unblacklistUser: (address: string) => void
 }
 
 export default function AdminChatTab({
-    isDark,
     blockedWords,
     newBlockedWord,
     setNewBlockedWord,
@@ -43,169 +53,219 @@ export default function AdminChatTab({
     deleteSelectedHistory,
     exportSelectedHistory,
     viewDayHistory,
+    moderationHistory,
+    unblacklistUser,
 }: AdminChatTabProps) {
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-black dark:text-white">Chat Management</h2>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Blocked Words */}
-                <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
-                    <CardHeader>
-                        <CardTitle className="text-black dark:text-white">Blocked Words</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-black dark:text-white">Chat Management</h2>
+                <div className="flex space-x-2">
+                    {selectedHistoryDays.length > 0 && (
                         <div className="flex space-x-2">
-                            <Input
-                                value={newBlockedWord}
-                                onChange={(e) => setNewBlockedWord(e.target.value)}
-                                placeholder="Add blocked word..."
-                                className="bg-white dark:bg-[#000000] border-black dark:border-white text-black dark:text-white rounded-lg"
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        addBlockedWord()
-                                    }
-                                }}
-                            />
                             <Button
-                                onClick={addBlockedWord}
-                                className="bg-[#000000] dark:bg-white text-white dark:text-[#000000] hover:bg-gray-800 dark:hover:bg-gray-200 rounded-lg"
+                                onClick={exportSelectedHistory}
+                                className="bg-[#000000] dark:bg-white text-white dark:text-[#000000] border-2 border-white dark:border-black hover:bg-white hover:text-black hover:border-black dark:hover:bg-black dark:hover:text-white dark:hover:border-white rounded-lg"
                             >
-                                Add
+                                Export Selected ({selectedHistoryDays.length})
+                            </Button>
+                            <Button
+                                onClick={deleteSelectedHistory}
+                                className="bg-red-600 text-white hover:bg-red-700 rounded-lg"
+                            >
+                                Delete Selected ({selectedHistoryDays.length})
                             </Button>
                         </div>
-                        <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
-                            {blockedWords.map((word, index) => (
-                                <Badge
-                                    key={index}
-                                    className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 px-3 py-1 flex items-center space-x-1"
-                                >
-                                    <span>{word}</span>
-                                    <button
-                                        onClick={() => removeBlockedWord(word)}
-                                        className="ml-1 hover:text-red-600 dark:hover:text-red-300"
-                                    >
-                                        <X className="h-3 w-3" />
-                                    </button>
-                                </Badge>
-                            ))}
+                    )}
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
+                        <Input
+                            placeholder="Search messages, users, keywords..."
+                            className="pl-10 bg-white dark:bg-[#000000] border-black dark:border-white text-black dark:text-white rounded-lg"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Chat Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
+                    <CardContent className="p-4">
+                        <div className="text-2xl font-bold text-black dark:text-white">
+                            {chatHistory.reduce((acc, day) => acc + day.messageCount, 0)}
                         </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Messages containing these words will trigger warnings. Users with 3+ warnings get restricted.
-                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Total Messages (7d)</p>
                     </CardContent>
                 </Card>
-
-                {/* Chat History */}
                 <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle className="text-black dark:text-white">Chat History</CardTitle>
-                        <div className="flex space-x-2">
-                            {selectedHistoryDays.length > 0 && (
-                                <>
-                                    <Button
-                                        onClick={exportSelectedHistory}
-                                        variant="outline"
-                                        size="sm"
-                                        className="bg-white dark:bg-[#000000] border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
-                                    >
-                                        <Download className="h-3 w-3 mr-1" />
-                                        Export ({selectedHistoryDays.length})
-                                    </Button>
-                                    <Button
-                                        onClick={deleteSelectedHistory}
-                                        variant="outline"
-                                        size="sm"
-                                        className="bg-white dark:bg-[#000000] border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-                                    >
-                                        <Trash2 className="h-3 w-3 mr-1" />
-                                        Delete
-                                    </Button>
-                                </>
-                            )}
+                    <CardContent className="p-4">
+                        <div className="text-2xl font-bold text-black dark:text-white">
+                            {Math.max(...chatHistory.map(d => d.activeUsers), 0)}
                         </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-2 max-h-64 overflow-y-auto">
-                            {chatHistory.map((day, index) => (
-                                <div
-                                    key={index}
-                                    className={`p-3 rounded-lg border ${selectedHistoryDays.includes(day.date)
-                                            ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                                            : "border-gray-200 dark:border-gray-700"
-                                        } cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900`}
-                                    onClick={() => toggleHistorySelection(day.date)}
-                                >
-                                    <div className="flex justify-between items-center">
-                                        <div className="flex items-center space-x-3">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedHistoryDays.includes(day.date)}
-                                                onChange={() => { }}
-                                                className="h-4 w-4"
-                                            />
-                                            <div>
-                                                <p className="text-sm font-medium text-black dark:text-white">{day.dayName}</p>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">{day.date}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center space-x-4 text-xs">
-                                            <span className="text-gray-600 dark:text-gray-400">{day.messageCount} msgs</span>
-                                            <span className="text-gray-600 dark:text-gray-400">{day.activeUsers} users</span>
-                                            {day.warnings > 0 && (
-                                                <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                                                    {day.warnings} warnings
-                                                </Badge>
-                                            )}
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    viewDayHistory(day.date, day.dayName)
-                                                }}
-                                                className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
-                                            >
-                                                <Eye className="h-3 w-3" />
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Active Chatters</p>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
+                    <CardContent className="p-4">
+                        <div className="text-2xl font-bold text-black dark:text-white">
+                            {chatHistory.reduce((acc, day) => acc + day.warnings, 0)}
                         </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Warnings Issued</p>
+                    </CardContent>
+                </Card>
+                <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
+                    <CardContent className="p-4">
+                        <div className="text-2xl font-bold text-black dark:text-white">
+                            {moderationHistory.filter(r => r.status === "blacklisted").length}
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Users Restricted</p>
                     </CardContent>
                 </Card>
             </div>
 
-            {/* Moderation Quick Stats */}
+            {/* Blocked Words Management */}
             <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
                 <CardHeader>
-                    <CardTitle className="text-black dark:text-white">Moderation Overview</CardTitle>
+                    <CardTitle className="text-black dark:text-white">Blocked Words Management</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="text-center p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                            <p className="text-2xl font-bold text-black dark:text-white">
-                                {chatHistory.reduce((acc, day) => acc + day.messageCount, 0)}
-                            </p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Total Messages (7d)</p>
-                        </div>
-                        <div className="text-center p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                            <p className="text-2xl font-bold text-black dark:text-white">
-                                {Math.max(...chatHistory.map((d) => d.activeUsers))}
-                            </p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Peak Active Users</p>
-                        </div>
-                        <div className="text-center p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                            <p className="text-2xl font-bold text-yellow-600">
-                                {chatHistory.reduce((acc, day) => acc + day.warnings, 0)}
-                            </p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Total Warnings</p>
-                        </div>
-                        <div className="text-center p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                            <p className="text-2xl font-bold text-green-600">{blockedWords.length}</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Blocked Words</p>
-                        </div>
+                    <div className="flex space-x-2 mb-4">
+                        <Input
+                            value={newBlockedWord}
+                            onChange={(e) => setNewBlockedWord(e.target.value)}
+                            placeholder="Add new blocked word..."
+                            className="flex-1 bg-white dark:bg-[#000000] border-black dark:border-white text-black dark:text-white rounded-lg"
+                        />
+                        <Button
+                            onClick={addBlockedWord}
+                            className="bg-[#000000] dark:bg-white text-white dark:text-[#000000] border-2 border-white dark:border-black hover:bg-white hover:text-black hover:border-black dark:hover:bg-black dark:hover:text-white dark:hover:border-white rounded-lg"
+                        >
+                            Add Word
+                        </Button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {blockedWords.map((word: string) => (
+                            <Badge key={word} className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded-lg">
+                                {word}
+                                <button onClick={() => removeBlockedWord(word)} className="ml-2 text-red-500 hover:text-red-700">
+                                    ×
+                                </button>
+                            </Badge>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* 7-Day Chat History */}
+            <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
+                <CardHeader>
+                    <CardTitle className="text-black dark:text-white flex items-center justify-between">
+                        <span>Chat History (Last 7 Days)</span>
+                        {selectedHistoryDays.length > 0 && (
+                            <Button
+                                onClick={deleteSelectedHistory}
+                                className="bg-red-600 text-white hover:bg-red-700 rounded-lg text-sm"
+                            >
+                                Delete Selected ({selectedHistoryDays.length})
+                            </Button>
+                        )}
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-2">
+                        {chatHistory.map((day) => (
+                            <div
+                                key={day.date}
+                                className={`p-3 rounded-lg border cursor-pointer transition-colors ${selectedHistoryDays.includes(day.date)
+                                    ? "bg-blue-100 dark:bg-blue-900 border-blue-500"
+                                    : "bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    }`}
+                            >
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-3">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedHistoryDays.includes(day.date)}
+                                            onChange={() => toggleHistorySelection(day.date)}
+                                            className="w-4 h-4"
+                                        />
+                                        <div onClick={() => viewDayHistory(day.date, day.dayName)} className="flex-1 hover:underline">
+                                            <div className="font-semibold text-black dark:text-white">
+                                                {day.date} ({day.dayName})
+                                            </div>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                {day.messageCount} messages • {day.activeUsers} active users
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                                        {day.warnings > 0 && <span className="text-red-500">{day.warnings} warnings</span>}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* User Moderation Table */}
+            <Card className="bg-white dark:bg-[#000000] border-black dark:border-white rounded-2xl">
+                <CardHeader>
+                    <CardTitle className="text-black dark:text-white">User Moderation History</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="border-b border-gray-300 dark:border-gray-600">
+                                    <th className="text-left p-3 text-black dark:text-white">User</th>
+                                    <th className="text-left p-3 text-black dark:text-white">Action</th>
+                                    <th className="text-left p-3 text-black dark:text-white">Reason</th>
+                                    <th className="text-left p-3 text-black dark:text-white">Date</th>
+                                    <th className="text-left p-3 text-black dark:text-white">Status</th>
+                                    <th className="text-left p-3 text-black dark:text-white">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {moderationHistory.map((record) => (
+                                    <tr key={record.id} className="border-b border-gray-200 dark:border-gray-700">
+                                        <td className="p-3 font-mono text-sm text-black dark:text-white">{record.userAddress}</td>
+                                        <td className="p-3">
+                                            <Badge
+                                                className={`${record.action === "warned"
+                                                    ? "bg-yellow-500 text-white"
+                                                    : record.action === "restricted"
+                                                        ? "bg-red-500 text-white"
+                                                        : "bg-gray-500 text-white"
+                                                    } rounded-lg`}
+                                            >
+                                                {record.action}
+                                            </Badge>
+                                        </td>
+                                        <td className="p-3 text-sm text-gray-700 dark:text-gray-300">{record.reason}</td>
+                                        <td className="p-3 text-sm text-gray-600 dark:text-gray-400">{record.date}</td>
+                                        <td className="p-3">
+                                            <Badge
+                                                className={`${record.status === "active" ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                                                    } rounded-lg`}
+                                            >
+                                                {record.status}
+                                            </Badge>
+                                        </td>
+                                        <td className="p-3">
+                                            {record.status === "blacklisted" && (
+                                                <Button
+                                                    onClick={() => unblacklistUser(record.userAddress)}
+                                                    className="bg-green-600 text-white hover:bg-green-700 rounded-lg text-xs px-3 py-1"
+                                                >
+                                                    Unblacklist
+                                                </Button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </CardContent>
             </Card>
