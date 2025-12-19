@@ -68,16 +68,16 @@ export function AdminChartModal({
                 {/* Time Frame Selector */}
                 <div className="flex flex-wrap gap-2 mb-6">
                     {timeFrames.map((frame) => (
-                        <Button
+                        <button
                             key={frame.key}
                             onClick={() => setModalTimeFrame(frame.key)}
-                            className={`${modalTimeFrame === frame.key
-                                ? "bg-[#000000] dark:bg-white text-white dark:text-[#000000]"
-                                : "bg-white dark:bg-[#000000] text-black dark:text-white border border-black dark:border-white"
-                                } rounded-lg text-sm px-3 py-1`}
+                            className={`px-4 py-2 text-sm font-medium rounded-xl border-2 transition-all duration-200 ${modalTimeFrame === frame.key
+                                    ? "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white"
+                                    : "bg-white dark:bg-black text-black dark:text-white border-black dark:border-white hover:bg-gray-100 dark:hover:bg-gray-900"
+                                }`}
                         >
                             {frame.label}
-                        </Button>
+                        </button>
                     ))}
                 </div>
 
