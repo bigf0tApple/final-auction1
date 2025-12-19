@@ -58,8 +58,9 @@
 | Original | 1573 | - |
 | After Users Tab | 1500 | -73 |
 | After Chat Tab | 1311 | -189 |
-| After Analytics Tab | **1285** | -27 |
-| **Total Saved** | - | **-288** |
+| After Analytics Tab | 1285 | -27 |
+| After Import Cleanup | **1269** | -16 |
+| **Total Saved** | - | **-304** |
 
 ### 📁 Audit Directory Structure
 - **Active docs:** 14 files (important/current)
