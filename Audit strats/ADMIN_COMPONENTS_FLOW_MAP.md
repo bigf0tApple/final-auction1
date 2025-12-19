@@ -14,19 +14,20 @@ The admin panel (`app/admin-panel.tsx`) has been refactored to extract reusable 
 ## Component Hierarchy
 
 ```
-app/admin-panel.tsx (1311 lines)
+app/admin-panel.tsx (1269 lines) ✨ Reduced from 1573
 ├── Imports from components/admin/
 │   ├── AdminUsersTab
 │   ├── AdminChatTab
+│   ├── AdminAnalyticsTab
 │   ├── AdminCharts
 │   ├── AdminMintModal
 │   └── AdminChartModal
 │
 ├── Tabs Structure:
-│   ├── "mint" tab      → Inline (497 lines) - Future extraction candidate
+│   ├── "mint" tab      → Inline (~495 lines) - Complex, kept inline
 │   ├── "users" tab     → <AdminUsersTab />
 │   ├── "chat" tab      → <AdminChatTab />
-│   └── "analytics" tab → Inline (uses AdminCharts)
+│   └── "analytics" tab → <AdminAnalyticsTab />
 │
 └── Modals:
     ├── MintFlowModal (dynamic import)
@@ -178,17 +179,25 @@ admin-panel.tsx OWNS state
 
 ---
 
-## Future Extraction Candidates
+## Extraction Summary (Dec 19, 2025)
 
-### AdminMintTab (Not Yet Extracted)
-- **Lines:** ~497
-- **Complexity:** High (form state, validation, file uploads)
-- **Recommendation:** Extract with internal state management
+### ✅ Completed Extractions
 
-### AdminAnalyticsTab (Not Yet Extracted)  
-- **Lines:** ~124
-- **Complexity:** Low (mostly renders AdminCharts)
-- **Recommendation:** Easy extraction, low priority
+| Component | Location | Lines | Props |
+|-----------|----------|-------|-------|
+| AdminUsersTab | `admin-users-tab.tsx` | 108 | 5 props |
+| AdminChatTab | `admin-chat-tab.tsx` | 275 | 12 props |
+| AdminAnalyticsTab | `admin-analytics-tab.tsx` | 69 | 6 props |
+
+**Total Lines Saved:** 304 (1573 → 1269)
+
+### Not Extracted (By Design)
+
+**AdminMintTab**
+- **Lines:** ~495
+- **Complexity:** High (form state, validation, file uploads, Supabase integration)
+- **Decision:** Kept inline due to tight coupling with parent state
+- **Recommendation:** Could be extracted if form state moved to custom hook
 
 ---
 
