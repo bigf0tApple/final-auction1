@@ -4,38 +4,22 @@ import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import {
   ArrowLeft,
-  Search,
-  TrendingUp,
-  DollarSign,
-  Activity,
-  UserPlus,
-  Eye,
-  Ban,
-  Award,
-  Gavel,
   Moon,
   Sun,
   X,
-  BarChart3,
-  LineChart,
-  PieChart,
   Upload,
   Calendar,
   Clock,
 } from "lucide-react"
 
-import { SalesTrendChart, BidActivityChart, UserGrowthChart } from "../components/demo-charts"
 import ChatButton from "../components/chat-button"
 import dynamic from "next/dynamic"
 
 const MintFlowModal = dynamic(() => import("../components/mint-flow-modal"))
 import {
-  AdminAnalyticsCards,
   AdminChartModal,
-  AdminChartsGrid,
   timeFrames,
   getAnalyticsData,
   mockUsers as initialMockUsers,
