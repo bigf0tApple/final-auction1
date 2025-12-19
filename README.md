@@ -111,13 +111,14 @@ NEXT_PUBLIC_CHAIN_ID=84532
 
 ```
 ├── app/                    # Next.js app directory
-│   ├── page.tsx           # Main auction page
-│   └── admin-panel.tsx    # Admin dashboard (1311 lines)
-├── components/            # React components
-│   ├── admin/            # Admin-specific components
-│   │   ├── admin-users-tab.tsx    # User management tab
-│   │   ├── admin-chat-tab.tsx     # Chat moderation tab
-│   │   ├── admin-charts.tsx       # Analytics charts
+│   ├── page.tsx           # Main auction page (953 lines)
+│   └── admin-panel.tsx    # Admin dashboard (1269 lines)
+├── components/            # React components (65+ files)
+│   ├── admin/            # Extracted admin components
+│   │   ├── admin-users-tab.tsx    # User management (108 lines)
+│   │   ├── admin-chat-tab.tsx     # Chat moderation (275 lines)
+│   │   ├── admin-analytics-tab.tsx # Analytics dashboard (69 lines)
+│   │   ├── admin-charts.tsx       # Chart components
 │   │   └── admin-data.ts          # Mock admin data
 │   ├── bidding/          # Bidding components
 │   │   └── max-pain-controller.tsx
@@ -128,16 +129,18 @@ NEXT_PUBLIC_CHAIN_ID=84532
 │   ├── ARPONFT.sol       # NFT contract  
 │   ├── interfaces/       # Contract interfaces
 │   └── examples/         # V4 Hook examples
-├── hooks/                # Custom React hooks
-│   ├── use-auction-state.ts    # Auction state machine
+├── hooks/                # Custom React hooks (10 files)
+│   ├── use-auction-state.ts    # Auction state machine (320 lines)
 │   ├── use-user-profile.ts     # User data & badges
 │   └── use-supabase-chat.ts    # Real-time chat
-├── lib/                  # Utility libraries
-│   ├── supabase.ts       # Database client
-│   ├── contracts.ts      # Blockchain interactions
+├── lib/                  # Utility libraries (7 files)
+│   ├── supabase.ts       # Database client (513 lines)
+│   ├── contracts.ts      # Blockchain interactions (475 lines)
 │   ├── sanitize.ts       # XSS prevention
 │   └── auction-data.ts   # Demo auction data
-├── test/                 # Contract tests
+├── test/                 # Test suites
+│   ├── lib/              # Unit tests
+│   └── stress/           # Stress/load tests
 └── scripts/              # Deployment scripts
 ```
 
@@ -145,16 +148,31 @@ NEXT_PUBLIC_CHAIN_ID=84532
 
 ## 🧪 Testing
 
+### Frontend Tests (Vitest)
+```bash
+# Run all frontend tests
+npm test
+
+# Single run (CI mode)
+npm run test:run
+
+# With coverage report
+npm run test:coverage
+```
+
+### Smart Contract Tests (Hardhat)
 ```bash
 # Run contract tests
 npx hardhat test
 
 # Run with coverage
-npx hardhat coverage
-
-# Type check
-npx tsc --noEmit
+npm run coverage
 ```
+
+### Test Coverage
+- **Unit Tests**: sanitize.ts, auction-data.ts (32 tests)
+- **Stress Tests**: Concurrent bidding, rate limiting (6 tests)
+- **Total**: 38 passing tests ✓
 
 ---
 

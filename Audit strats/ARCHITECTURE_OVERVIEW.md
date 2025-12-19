@@ -25,8 +25,8 @@
 │  demo-charts.tsx     │  search-modal.tsx     │  display-name    │
 ├─────────────────────────────────────────────────────────────────┤
 │  ADMIN COMPONENTS (components/admin/)                           │
-│  AdminUsersTab       │  AdminChatTab         │  AdminCharts     │
-│  AdminMintModal      │  AdminChartModal      │  admin-data.ts   │
+│  AdminUsersTab       │  AdminChatTab         │  AdminAnalyticsTab│
+│  AdminMintModal      │  AdminCharts          │  admin-data.ts    │
 └─────────────────────────────────────────────────────────────────┘
                                  │
                                  ▼
