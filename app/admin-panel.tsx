@@ -46,6 +46,7 @@ import {
   exportChatHistoryToCSV,
   AdminUsersTab,
   AdminChatTab,
+  AdminAnalyticsTab,
 } from "../components/admin"
 import { useClientAuctions } from "../hooks/use-client-auctions"
 import { useChatPinned } from "../hooks/use-chat-pinned"
@@ -1184,43 +1185,16 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
           </div>
         )}
 
-        {/* Analytics Tab */}
+        {/* Analytics Tab - Using extracted component */}
         {activeTab === "analytics" && (
-          <div className="space-y-8">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-black dark:text-white">Site Analytics</h2>
-
-              {/* Time Frame Selector */}
-              <div className="flex space-x-2">
-                {timeFrames.map((frame) => (
-                  <Button
-                    key={frame.key}
-                    onClick={() => setSelectedTimeFrame(frame.key)}
-                    className={`${selectedTimeFrame === frame.key
-                      ? "bg-[#000000] dark:bg-white text-white dark:text-[#000000]"
-                      : "bg-white dark:bg-[#000000] text-black dark:text-white border border-black dark:border-white"
-                      } rounded-lg text-sm px-3 py-1`}
-                  >
-                    {frame.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Analytics Cards - Now using extracted component */}
-            <AdminAnalyticsCards
-              analytics={analytics}
-              isDark={isDark}
-              onOpenDetailedChart={openDetailedChart}
-            />
-
-            {/* Detailed Charts Section - Now using extracted component */}
-            <AdminChartsGrid
-              isDark={isDark}
-              selectedTimeFrame={selectedTimeFrame}
-              analytics={analytics}
-            />
-          </div>
+          <AdminAnalyticsTab
+            isDark={isDark}
+            analytics={analytics}
+            selectedTimeFrame={selectedTimeFrame}
+            setSelectedTimeFrame={setSelectedTimeFrame}
+            timeFrames={timeFrames}
+            onOpenDetailedChart={openDetailedChart}
+          />
         )}
 
         {/* User Management Tab - Using extracted component */}

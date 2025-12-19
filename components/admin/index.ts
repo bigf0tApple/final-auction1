@@ -17,4 +17,4 @@ export { exportChatHistoryToCSV, exportUsersToCSV } from './admin-export'
 // Tab components for admin panel
 export { default as AdminUsersTab } from './admin-users-tab'
 export { default as AdminChatTab } from './admin-chat-tab'
-
+export { default as AdminAnalyticsTab } from './admin-analytics-tab'
