@@ -199,7 +199,7 @@ export default function TermsPage({ onClose, isDark }: TermsPageProps) {
 
             {/* Last Updated */}
             <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'} pt-8 border-t ${isDark ? 'border-gray-600' : 'border-gray-300'}`}>
-              Last updated: December 2024
+              Last updated: December 2025
             </div>
           </div>
         </div>
