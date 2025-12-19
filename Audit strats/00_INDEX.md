@@ -1,5 +1,8 @@
 # Audit strats — Index
 
+> ⚠️ **DEPRECATED:** See `MASTER_INDEX.md` for the updated navigation guide.
+> This file is kept for historical reference.
+
 Use these documents as reusable audit playbooks. They are designed to be copy/paste friendly.
 
 ## What to use when
