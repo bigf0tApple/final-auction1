@@ -29,7 +29,9 @@ import {
 
 import { SalesTrendChart, BidActivityChart, UserGrowthChart } from "../components/demo-charts"
 import ChatButton from "../components/chat-button"
-import MintFlowModal from "../components/mint-flow-modal"
+import dynamic from "next/dynamic"
+
+const MintFlowModal = dynamic(() => import("../components/mint-flow-modal"))
 import {
   AdminAnalyticsCards,
   AdminChartModal,

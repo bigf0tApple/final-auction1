@@ -133,3 +133,13 @@ const primaryVariant = "bg-primary text-primary-foreground..."
 ## Files Changed This Audit
 - Created `/Audit strats/SECURITY_AUDIT_REPORT.md`
 - Created `/Audit strats/CODE_QUALITY_AUDIT_REPORT.md`
+
+## Progress Log (Dec 19, 2025)
+- [x] Extracted `ActiveAuctionHero` from `page.tsx` (~170 lines reduced).
+- [x] Defined `auction` and `auction-secondary` button variants in `components/ui/button.tsx`.
+- [x] Applied button variants to `ActiveAuctionHero` to reduce duplicate tailwind classes.
+- [x] Converted `MintFlowModal` to dynamic import in `admin-panel.tsx`.
+- [x] Fixed type mismatch in `ActiveAuctionHero` props.
+- [x] Replaced `any` types in `ActiveAuctionHero` (mostly, generic types used for now).
+- [x] Cleaned up console.logs in `page.tsx` and `admin-panel.tsx`.
+
