@@ -134,6 +134,56 @@ npm run lint
 
 ---
 
+## 🧩 Component Patterns
+
+### Extracted Tab Components
+
+When extracting tab content from large files like `admin-panel.tsx`:
+
+```tsx
+// Parent owns state, child receives via props
+interface MyTabProps {
+  isDark: boolean
+  data: ItemType[]
+  onAction: (id: string) => void
+}
+
+export default function MyTab({ isDark, data, onAction }: MyTabProps) {
+  // Display only - no internal state that affects parent
+  return (
+    <div>
+      {data.map(item => (
+        <Button onClick={() => onAction(item.id)}>Action</Button>
+      ))}
+    </div>
+  )
+}
+```
+
+See: `components/admin/admin-users-tab.tsx`, `admin-chat-tab.tsx`
+
+### Memoization Guidelines
+
+Use `memo` for list item components that re-render frequently:
+
+```tsx
+import { memo } from "react"
+
+const ChatMessageItem = memo(function ChatMessageItem({ message, isDark }: Props) {
+  // Component content
+})
+```
+
+Use `useCallback` for handlers passed to child components:
+
+```tsx
+const handleClick = useCallback(() => {
+  // Handler logic
+}, [dependencies])
+```
+
+See: `components/auction-chat.tsx` for ChatMessageItem example
+
 ## 🔄 Pull Request Process
 
 1. **Create a feature branch**

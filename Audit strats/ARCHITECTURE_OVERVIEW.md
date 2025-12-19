@@ -1,6 +1,6 @@
 # ARPO Studio - System Architecture Overview
 
-**Date:** December 18, 2025
+**Date:** December 19, 2025 (Updated after refactoring)
 
 ---
 
@@ -23,6 +23,10 @@
 │  auction-chat.tsx    │  mint-flow-modal.tsx  │  site-header.tsx │
 │  auction-calendar    │  wallet-connect-modal │  chat-button     │
 │  demo-charts.tsx     │  search-modal.tsx     │  display-name    │
+├─────────────────────────────────────────────────────────────────┤
+│  ADMIN COMPONENTS (components/admin/)                           │
+│  AdminUsersTab       │  AdminChatTab         │  AdminCharts     │
+│  AdminMintModal      │  AdminChartModal      │  admin-data.ts   │
 └─────────────────────────────────────────────────────────────────┘
                                  │
                                  ▼
@@ -166,21 +170,30 @@ User sends message
 ```
 /
 ├── app/                    # Next.js pages
-│   ├── page.tsx           # Main auction page (1090 lines)
-│   └── admin-panel.tsx    # Admin dashboard (2136 lines)
+│   ├── page.tsx           # Main auction page (953 lines)
+│   └── admin-panel.tsx    # Admin dashboard (1311 lines) ✨ Refactored
 │
-├── components/            # React components (35 files)
+├── components/            # React components (40+ files)
+│   ├── admin/            # Extracted admin components
+│   │   ├── admin-users-tab.tsx   # User management (108 lines)
+│   │   ├── admin-chat-tab.tsx    # Chat moderation (275 lines)
+│   │   ├── admin-charts.tsx      # Analytics charts
+│   │   └── admin-data.ts         # Shared mock data
 │   ├── ui/               # shadcn/ui primitives (50 files)
 │   └── bidding/          # Bidding-specific components (4 files)
 │
 ├── hooks/                 # Custom React hooks (10 files)
 │
-├── lib/                   # Utilities & configs (5 files)
+├── lib/                   # Utilities & configs (6 files)
 │   ├── contracts.ts      # Web3 integration
 │   ├── supabase.ts       # Database client
+│   ├── sanitize.ts       # XSS prevention ✨ Added
 │   └── auction-data.ts   # Demo/mock data
 │
 ├── contracts/            # Solidity contracts (4 files)
+│   └── examples/         # V4 Hook examples (2 files)
 │
-└── Audit strats/         # Documentation (70+ files)
+└── Audit strats/         # Documentation
+    ├── (12 active docs)  # Current documentation
+    └── archive/          # Archived flow maps (63 files)
 ```

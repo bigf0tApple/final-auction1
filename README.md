@@ -112,21 +112,31 @@ NEXT_PUBLIC_CHAIN_ID=84532
 ```
 ├── app/                    # Next.js app directory
 │   ├── page.tsx           # Main auction page
-│   └── admin-panel.tsx    # Admin dashboard
+│   └── admin-panel.tsx    # Admin dashboard (1311 lines)
 ├── components/            # React components
 │   ├── admin/            # Admin-specific components
-│   ├── ui/               # Reusable UI components
+│   │   ├── admin-users-tab.tsx    # User management tab
+│   │   ├── admin-chat-tab.tsx     # Chat moderation tab
+│   │   ├── admin-charts.tsx       # Analytics charts
+│   │   └── admin-data.ts          # Mock admin data
+│   ├── bidding/          # Bidding components
+│   │   └── max-pain-controller.tsx
+│   ├── ui/               # Reusable UI components (shadcn)
 │   └── *.tsx             # Feature components
 ├── contracts/            # Solidity contracts
 │   ├── AuctionHouse.sol  # Main auction contract
-│   ├── ARPONFT.sol       # NFT contract
-│   └── interfaces/       # Contract interfaces
+│   ├── ARPONFT.sol       # NFT contract  
+│   ├── interfaces/       # Contract interfaces
+│   └── examples/         # V4 Hook examples
 ├── hooks/                # Custom React hooks
+│   ├── use-auction-state.ts    # Auction state machine
+│   ├── use-user-profile.ts     # User data & badges
+│   └── use-supabase-chat.ts    # Real-time chat
 ├── lib/                  # Utility libraries
 │   ├── supabase.ts       # Database client
 │   ├── contracts.ts      # Blockchain interactions
 │   ├── sanitize.ts       # XSS prevention
-│   └── pinata.ts         # IPFS uploads
+│   └── auction-data.ts   # Demo auction data
 ├── test/                 # Contract tests
 └── scripts/              # Deployment scripts
 ```

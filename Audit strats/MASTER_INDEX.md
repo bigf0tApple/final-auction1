@@ -1,7 +1,7 @@
 # ARPO Studio - Audit Documentation Master Index
 
 **Updated:** December 19, 2025  
-**Active Files:** 12  
+**Active Files:** 13  
 **Archived Files:** 63 (in `archive/` folder)
 
 ---
@@ -9,11 +9,12 @@
 ## 🔴 Current & Critical (Must Read)
 
 | File | Purpose | Last Updated |
-|------|---------|--------------|
+|------|---------|--------------| 
 | `COMPREHENSIVE_AUDIT_DEC19.md` | **Latest full audit** - 88% health score | Dec 19 |
-| `ARCHITECTURE_OVERVIEW.md` | System architecture & component hierarchy | Dec 18 |
+| `ARCHITECTURE_OVERVIEW.md` | System architecture & component hierarchy | Dec 19 |
 | `SECURITY_AUDIT_REPORT.md` | Security findings - all medium issues fixed | Dec 19 |
 | `CODE_QUALITY_AUDIT_REPORT.md` | Code quality issues & tracking | Dec 18 |
+| `ADMIN_COMPONENTS_FLOW_MAP.md` | **NEW** - Extracted admin tab components | Dec 19 |
 
 ---
 
@@ -29,14 +30,16 @@
 
 ---
 
-## 🟢 Flow Maps by Domain
+## 🟢 Active Flow Maps
 
-### Admin Panel
-- `ADMIN_PANEL_SHELL_FLOW_MAP.md`
-- `ADMIN_ANALYTICS_CHART_MODAL_FLOW_MAP.md`
-- `ADMIN_MINT_AUCTION_FLOW_MAP.md`
-- `ADMIN_USER_MANAGEMENT_FLOW_MAP.md`
-- `ADMIN_BLOCKED_WORDS_MANAGEMENT_FLOW_MAP.md`
+### Admin Panel (Current)
+- `ADMIN_COMPONENTS_FLOW_MAP.md` - **NEW Dec 19** - AdminUsersTab, AdminChatTab
+
+### Auction Scheduling
+- `AUCTION_SCHEDULE_LOGIC_MAP.md` - Still active reference
+
+> **Note:** 63 legacy flow maps have been moved to `archive/` folder. 
+> They remain available for reference but are no longer actively maintained.
 
 ### Auction Core
 - `AUCTION_HOME_PAGE_FLOW_MAP.md`
