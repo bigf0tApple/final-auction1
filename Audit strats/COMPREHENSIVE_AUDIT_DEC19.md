@@ -24,22 +24,24 @@
 ### Current Large Files
 | File | Lines | Status | Notes |
 |------|-------|--------|-------|
-| `app/admin-panel.tsx` | **1311** | ✅ Improved | Reduced from 1573 (extracted AdminUsersTab, AdminChatTab) |
-| `app/page.tsx` | 953 | ✅ Improved | Reduced from 1090 (extracted ActiveAuctionHero) |
+| `app/admin-panel.tsx` | **1269** | ✅ Optimized | 304 lines saved (19.3% reduction) |
+| `app/page.tsx` | 953 | ✅ Improved | Reduced from 1090 |
 | `auction-chat.tsx` | 874 | ✅ Memoized | Added ChatMessageItem memoization |
-| `mint-flow-modal.tsx` | 554 | ⚠️ Review | Consider wizard step components |
+| `mint-flow-modal.tsx` | 554 | OK | Complex wizard, acceptable |
 | `lib/supabase.ts` | 513 | OK | Data layer, acceptable |
 | `lib/contracts.ts` | 475 | OK | Contract interactions |
 
 ### ✅ Extractions Completed (Dec 19)
-1. `AdminUsersTab` → `components/admin/admin-users-tab.tsx` (108 lines)
-2. `AdminChatTab` → `components/admin/admin-chat-tab.tsx` (275 lines)
-3. `ChatMessageItem` → Memoized within `auction-chat.tsx`
-4. **Total Lines Saved:** 262 lines from admin-panel.tsx
+| Component | Source | Lines | Saved |
+|-----------|--------|-------|-------|
+| `AdminUsersTab` | admin-panel.tsx | 108 | -73 |
+| `AdminChatTab` | admin-panel.tsx | 275 | -189 |
+| `AdminAnalyticsTab` | admin-panel.tsx | 69 | -27 |
+| Import cleanup | admin-panel.tsx | - | -16 |
+| **Total** | - | **452** | **-304** |
 
-### Remaining Split Candidates (Optional)
-1. `admin-panel.tsx` → `AdminMintTab`, `AdminAnalyticsTab` (~400 more lines)
-2. `auction-chat.tsx` → `ChatMessageList`, `ChatInput`, `ChatHeader`
+### Remaining (By Design)
+- `AdminMintTab` kept inline (~495 lines) - tightly coupled with form state
 
 ---
 
