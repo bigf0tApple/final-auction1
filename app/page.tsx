@@ -21,6 +21,7 @@ import ChatButton from "../components/chat-button"
 
 import AuctionEndingBanner from "../components/auction-ending-banner"
 import TransactionModal from "../components/transaction-modal"
+import ToastNotification from "../components/toast-notification"
 import { useChatPinned } from "../hooks/use-chat-pinned"
 import { useUserProfile } from "../hooks/use-user-profile"
 import { useClientAuctions } from "../hooks/use-client-auctions"
@@ -103,6 +104,7 @@ function AuctionSiteContent() {
   // 🎮 DEMO MODE - Test credits for testing without real ETH
   const [isDemoMode, setIsDemoMode] = useState(true) // Enable by default for testing
   const [demoCredits, setDemoCredits] = useState(10.0) // Start with 10 ETH worth of credits
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null)
 
   const [currentTime, setCurrentTime] = useState(() => new Date(0))
   const [activeAuction, setActiveAuction] = useState<AuctionEvent | null>(null)
@@ -428,13 +430,11 @@ function AuctionSiteContent() {
 
           // Check if contracts are configured
           if (!CONTRACTS.auctionHouse || isDemoMode) {
-            // Demo mode - use demo credits
+            // Demo mode - use demo credits with simple toast instead of modal
             if (isDemoMode && demoCredits < amount) {
-              setTxModal(prev => ({
-                ...prev,
-                status: "error",
-                description: `Not enough demo credits! You have ${demoCredits.toFixed(4)} ETH`,
-              }))
+              setToast({ message: `Not enough credits! You have ${demoCredits.toFixed(2)} ETH`, type: "error" })
+              setPendingBids((prev) => ({ ...prev, [pendingKey]: false }))
+              setTxModal(prev => ({ ...prev, isOpen: false }))
               return
             }
 
@@ -444,16 +444,12 @@ function AuctionSiteContent() {
             }
 
             placeBid(amount, connectedWallet)
-            setTxModal(prev => ({
-              ...prev,
-              status: "success",
-              description: `🎮 Demo bid of ${amount.toFixed(4)} ${acceptedToken.symbol} placed! Credits remaining: ${(demoCredits - amount).toFixed(4)}`,
-            }))
+
+            // Close modal and show simple toast
+            setTxModal(prev => ({ ...prev, isOpen: false }))
+            setToast({ message: `Bid placed: ${amount.toFixed(2)} ${acceptedToken.symbol}`, type: "success" })
             notifyBidPlaced(amount.toFixed(4), acceptedToken.symbol)
-            setNotification({
-              message: `🎮 Demo bid: ${amount.toFixed(4)} ${acceptedToken.symbol}`,
-              type: "success",
-            })
+            setPendingBids((prev) => ({ ...prev, [pendingKey]: false }))
             return
           }
 
@@ -634,6 +630,16 @@ function AuctionSiteContent() {
           type={notification.type}
           onClose={() => setNotification(null)}
           isDark={isDark}
+        />
+      )}
+
+      {/* Simple Toast for Bid Confirmations */}
+      {toast && (
+        <ToastNotification
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+          duration={2500}
         />
       )}
 

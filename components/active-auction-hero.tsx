@@ -3,17 +3,16 @@
 import Image from "next/image"
 import { Clock, TrendingUp, Wallet } from "lucide-react"
 import { Button } from "./ui/button"
+import type { AuctionEvent } from "@/lib/auction-data"
 
-// Define exact shape needed or import types if possible
-// For now, we define a compatible subset
+// Props interface with proper types
 interface ActiveAuctionHeroProps {
     isDark: boolean
-    displayAuction: any // Relaxed for now to accept AuctionEvent | UpcomingAuction
+    displayAuction: AuctionEvent | null
     auctionState: {
         currentBid: number
         highestBidder?: string
         isEnded?: boolean
-        // Add other properties if actually used
     }
     acceptedToken: {
         symbol: string
@@ -28,7 +27,7 @@ interface ActiveAuctionHeroProps {
     countdownLabel: string
     connectedWallet: string | null
     connectWallet: () => void
-    activeAuction: any
+    activeAuction: AuctionEvent | null
     isDemoMode: boolean
     isFinalTenSeconds: boolean
     getMinBid: () => number
