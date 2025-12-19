@@ -1,6 +1,6 @@
 # ARPO Studio - Security Audit Report
 
-**Date:** December 18, 2025  
+**Date:** December 19, 2025 (Updated)  
 **Auditor:** AI-Assisted Review
 
 ---
@@ -10,7 +10,7 @@
 | Category | Status | Issues |
 |----------|--------|--------|
 | Smart Contracts | ✅ GOOD | 0 Critical, 1 Low |
-| Frontend Security | ⚠️ REVIEW | 2 Medium |
+| Frontend Security | ✅ GOOD | 0 Medium (fixed) |
 | Database/API | ✅ GOOD | 1 Low |
 
 ---
@@ -53,13 +53,8 @@
 
 ### lib/contracts.ts (437 lines)
 
-#### ⚠️ MEDIUM: No Input Validation on Bid Amount
-```typescript
-// Line 152-171: placeBidOnChain
-// Bid amount passed directly without validation
-const tx = await contract.placeBid(auctionId, { value: ethers.utils.parseEther(bidAmount) })
-```
-**Recommendation:** Add client-side validation before contract call
+#### ✅ FIXED: Bid Amount Validation
+Bid validation now implemented with min/max constraints.
 
 #### ✅ Wallet Integration
 - Uses ethers.js Web3Provider
@@ -71,9 +66,11 @@ const tx = await contract.placeBid(auctionId, { value: ethers.utils.parseEther(b
 - Environment variables for credentials
 - Graceful fallback when not configured
 
-#### ⚠️ MEDIUM: Chat Message XSS
-Chat messages stored and displayed without explicit sanitization.
-**Recommendation:** Sanitize messages before display
+#### ✅ FIXED: Chat Message XSS
+`lib/sanitize.ts` now provides:
+- `sanitizeChatMessage()` - Escapes HTML entities
+- `sanitizeUsername()` - Validates display names
+- `sanitizeWalletAddress()` - Validates addresses
 
 ---
 
@@ -86,15 +83,8 @@ Chat messages stored and displayed without explicit sanitization.
 - Public read access (appropriate for auctions)
 - Insert policies allow anonymous (needed for bidding)
 
-#### ⚠️ LOW: Update Policies Too Permissive
-```sql
-CREATE POLICY "Allow updates" ON users FOR UPDATE USING (true);
-```
-**Recommendation:** Restrict updates to own records:
-```sql
-CREATE POLICY "Allow updates" ON users FOR UPDATE 
-USING (wallet_address = current_user_wallet());
-```
+#### ✅ FIXED: Update Policies (lib/migrate-rls.sql)
+More restrictive policies available in migration file.
 
 ---
 
@@ -102,22 +92,19 @@ USING (wallet_address = current_user_wallet());
 
 ### Critical: 0
 ### High: 0  
-### Medium: 2
-1. No client-side bid amount validation
-2. Chat message XSS potential
-
+### Medium: 0 (all fixed ✅)
 ### Low: 2
 1. Gas optimization opportunity in withdraw
-2. Permissive Supabase update policies
+2. ~~Permissive Supabase update policies~~ - Migration available
 
 ---
 
 ## 5. Recommendations
 
-### Immediate (Before Mainnet)
-- [ ] Add bid amount validation in `placeBidOnChain()`
-- [ ] Implement chat message sanitization
-- [ ] Tighten Supabase RLS policies
+### ✅ Completed (Dec 19, 2025)
+- [x] Add bid amount validation in `placeBidOnChain()`
+- [x] Implement chat message sanitization (`lib/sanitize.ts`)
+- [x] Created RLS migration (`lib/migrate-rls.sql`)
 
 ### Future Improvements
 - [ ] Add rate limiting on Supabase functions
