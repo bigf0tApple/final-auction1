@@ -731,7 +731,9 @@ export default function AuctionChat({
             >
               <button
                 onClick={() => {
-                  // TODO: Navigate to profile
+                  // Profile navigation - show wallet info for now
+                  // In production: navigate to /profile/{wallet} 
+                  alert(`Profile for: ${userDropdown.user}\n\nProfile pages coming soon!`)
                   setUserDropdown(null)
                 }}
                 className={`w-full px-4 py-2 text-sm text-left flex items-center gap-2 ${isDark

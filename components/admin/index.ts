@@ -13,3 +13,8 @@ export {
 } from './admin-data'
 export { AdminMintConfirmationModal, type MintFormData, type AdminMintConfirmationModalProps } from './admin-mint-modal'
 export { exportChatHistoryToCSV, exportUsersToCSV } from './admin-export'
+
+// Tab components for admin panel
+export { default as AdminUsersTab } from './admin-users-tab'
+export { default as AdminChatTab } from './admin-chat-tab'
+

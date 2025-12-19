@@ -566,9 +566,12 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
   const filteredUsers = mockUsers.filter((user) => user.address.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const toggleUserStatus = (address: string) => {
-    // TODO: Implement actual user status toggling functionality
-    // In production, this would update user status in the database
-    void address
+    // Display confirmation and simulate status toggle
+    // In production: call Supabase to update user status
+    const action = confirm(`Toggle status for user ${address}?\n\nThis would update the user's status in the database.`)
+    if (action) {
+      alert(`User ${address} status has been toggled. (Demo - no actual change made)`)
+    }
   }
 
   const openDetailedChart = (chartType: string) => {

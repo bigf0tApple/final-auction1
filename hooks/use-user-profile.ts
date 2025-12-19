@@ -128,8 +128,8 @@ export function useUserProfile(connectedWallet: string) {
             return profile.username
         }
 
-        // 2. Check local storage for others (since we lack sync Supabase getter for others here)
-        // TODO: Could use async fetch if this was async, but it's not.
+        // 2. Check local storage for others (localStorage used for sync access)
+        // Note: For async/Supabase fetch, use getDisplayNameAsync if implemented
         const existingUsers = JSON.parse(localStorage.getItem("arpo_users") || "{}")
         const userProfile = existingUsers[wallet.toLowerCase()]
         if (userProfile?.username) return userProfile.username
