@@ -16,6 +16,7 @@ interface ChatButtonProps {
   isFinalTenSeconds: boolean
   acceptedToken?: AcceptedToken
   onchainRecipientAddress?: string
+  onConnectWallet?: () => void
 }
 
 export default function ChatButton({
@@ -27,6 +28,7 @@ export default function ChatButton({
   isFinalTenSeconds,
   acceptedToken,
   onchainRecipientAddress,
+  onConnectWallet,
 }: ChatButtonProps) {
   const [showDisplayNameModal, setShowDisplayNameModal] = useState(false)
   const [showChat, setShowChat] = useState(false)
@@ -50,8 +52,8 @@ export default function ChatButton({
 
   const handleChatClick = () => {
     if (!connectedWallet) {
-      // Show notification instead of silent return
-      alert("Please connect your wallet to access chat")
+      // Open wallet connect modal instead of alert
+      onConnectWallet?.()
       return
     }
 

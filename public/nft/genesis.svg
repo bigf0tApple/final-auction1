@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a0030"/>
+      <stop offset="50%" style="stop-color:#000020"/>
+      <stop offset="100%" style="stop-color:#0a0015"/>
+    </linearGradient>
+    <linearGradient id="aurora1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.8"/>
+      <stop offset="50%" style="stop-color:#ec4899;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0.4"/>
+    </linearGradient>
+    <linearGradient id="aurora2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:0.7"/>
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:0.5"/>
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0.3"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="30" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="blur-soft">
+      <feGaussianBlur stdDeviation="15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="1000" fill="url(#bg)"/>
+  
+  <!-- Aurora waves -->
+  <ellipse cx="300" cy="400" rx="400" ry="200" fill="url(#aurora1)" filter="url(#glow)" opacity="0.6" transform="rotate(-15 300 400)"/>
+  <ellipse cx="700" cy="600" rx="350" ry="180" fill="url(#aurora2)" filter="url(#glow)" opacity="0.5" transform="rotate(20 700 600)"/>
+  <ellipse cx="500" cy="300" rx="300" ry="150" fill="url(#aurora1)" filter="url(#blur-soft)" opacity="0.4" transform="rotate(-5 500 300)"/>
+  
+  <!-- Central portal glow -->
+  <circle cx="500" cy="500" r="150" fill="none" stroke="url(#aurora2)" stroke-width="3" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="500" cy="500" r="100" fill="none" stroke="url(#aurora1)" stroke-width="2" opacity="0.6"/>
+  <circle cx="500" cy="500" r="50" fill="#8b5cf6" opacity="0.3" filter="url(#glow)"/>
+  
+  <!-- Stars -->
+  <g fill="#fff" opacity="0.6">
+    <circle cx="100" cy="100" r="2"/>
+    <circle cx="200" cy="80" r="1.5"/>
+    <circle cx="800" cy="150" r="2"/>
+    <circle cx="900" cy="200" r="1"/>
+    <circle cx="150" cy="850" r="1.5"/>
+    <circle cx="850" cy="900" r="2"/>
+    <circle cx="50" cy="500" r="1"/>
+    <circle cx="950" cy="450" r="1.5"/>
+    <circle cx="300" cy="950" r="2"/>
+    <circle cx="700" cy="50" r="1"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="500" y="920" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="24" font-weight="bold" opacity="0.9">GENESIS</text>
+  <text x="500" y="950" text-anchor="middle" fill="#8b5cf6" font-family="system-ui, sans-serif" font-size="14" opacity="0.8">ARPO STUDIO</text>
+</svg>

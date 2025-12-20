@@ -873,6 +873,7 @@ function AuctionSiteContent() {
         isFinalTenSeconds={isFinalTenSeconds}
         acceptedToken={acceptedToken}
         onchainRecipientAddress={activeAuction?.auctionContractAddress}
+        onConnectWallet={connectWallet}
       />
 
       {/* User Profile Modal */}
