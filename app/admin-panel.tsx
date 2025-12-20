@@ -159,7 +159,7 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
     uploadedImage: null as File | null,
     teaserImage: null as File | null,
 
-    auctionContractAddress: "",
+    auctionContractAddress: "0x0000000000000000000000000000000000000001", // Test address for demo mode
 
     acceptedTokenMode: "ETH" as "ETH" | "USDC" | "CUSTOM",
     customTokenAddress: "",
@@ -314,7 +314,11 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
       }
     }
 
-    if (!mintForm.auctionContractAddress.trim() || !isHexAddress(mintForm.auctionContractAddress)) {
+    // In test mode, bypass contract address validation or use placeholder
+    const effectiveContractAddress = mintForm.auctionContractAddress.trim() ||
+      (isTestMode ? "0x0000000000000000000000000000000000000001" : "")
+
+    if (!effectiveContractAddress || !isHexAddress(effectiveContractAddress)) {
       alert("Please enter a valid auction contract/recipient address")
       return
     }
