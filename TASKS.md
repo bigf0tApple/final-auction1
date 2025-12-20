@@ -1,6 +1,6 @@
 # ARPO Studio - Task Tracker
 
-**Updated:** December 19, 2025 (18:15 UTC+8)  
+**Updated:** December 19, 2025 (23:15 UTC+8)  
 **Version:** V4 (Extensible Hooks)
 
 ---
@@ -19,7 +19,17 @@
 
 ## 🔥 Most Recent Changes (Dec 19, 2025)
 
-### UI Improvements
+### Supabase Setup Complete ✅
+- [x] Database schema applied (5 tables: users, auctions, bids, chat_messages, user_stats)
+- [x] Realtime enabled for chat_messages, auctions, bids
+- [x] Live chat tested and verified working
+
+### UI Bug Fixes
+- [x] Fixed z-index overlap: Chat panel (z-40) now below modals (z-50)
+- [x] Fixed time frame button hover states with consistent rounded-xl corners
+- [x] User dropdown z-index fixed (z-45)
+
+### Previous UI Improvements
 - [x] Replaced large bid confirmation modal with small toast notification
 - [x] Created `ToastNotification` component for minimal feedback
 - [x] Added `auction` and `auction-secondary` button variants
@@ -72,12 +82,12 @@
 ## 📋 Still To Do
 
 ### User Actions Required
-- [ ] Create Supabase project
-- [ ] Run `lib/schema.sql` in SQL Editor
-- [ ] Add `.env.local` credentials (Supabase URL + Key)
-- [ ] Deploy `ARPONFT` to Base Sepolia
-- [ ] Deploy `ARPOAuctionHouse` to Base Sepolia
-- [ ] Call `ARPONFT.setAuctionHouse()` with AuctionHouse address
+- [x] ~~Create Supabase project~~ ✅ Done
+- [x] ~~Run `lib/schema.sql` in SQL Editor~~ ✅ Done
+- [x] ~~Add `.env.local` credentials~~ ✅ Done
+- [x] ~~Deploy `ARPONFT` to Base Sepolia~~ ✅ `0x7cDE4C6DA010679782936a1fE856E2C0c014533A`
+- [x] ~~Deploy `ARPOAuctionHouse` to Base Sepolia~~ ✅ `0xff39c2323F802cBB418fB731CcEF8e9015F10593`
+- [x] ~~Call `ARPONFT.setAuctionHouse()`~~ ✅ Linked automatically
 
 ### Development Tasks
 - [x] Example hook contracts (Allowlist, Rewards) - `contracts/examples/`
