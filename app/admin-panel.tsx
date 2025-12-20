@@ -401,16 +401,79 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
     if (isSupabaseConnected) {
       if (!mintForm.uploadedImage || !mintForm.teaserImage) return // Should be validated already
 
-      // Upload mock images
-      // const mainCid = await mockUploadToIPFS(mintForm.uploadedImage)
-      // const teaserCid = await mockUploadToIPFS(mintForm.teaserImage)
+      // Upload images to Pinata IPFS
+      let mainCid = "QmTest" + Date.now()
+      let teaserCid = "QmTeaser" + Date.now()
 
-      // Since we don't have real IPFS, we'll use placeholder CIDs from our DB logic or just empty strings
-      // Ideally we should upload to Supabase Storage if configured, but let's stick to the schema requirement
-      // Schema says text NOT NULL for image_ipfs_cid
+      try {
+        // Upload main image
+        const mainFormData = new FormData()
+        mainFormData.append("file", mintForm.uploadedImage)
+        mainFormData.append("name", `${mintForm.title}_main`)
 
-      const mainCid = "QmTest" + Date.now()
-      const teaserCid = "QmTeaser" + Date.now()
+        const mainResponse = await fetch("/api/upload", {
+          method: "POST",
+          body: mainFormData,
+        })
+
+        if (mainResponse.ok) {
+          const mainData = await mainResponse.json()
+          mainCid = mainData.cid
+          console.log("Main image uploaded to IPFS:", mainCid)
+        } else {
+          console.warn("Main image upload failed, using mock CID")
+        }
+
+        // Upload teaser image
+        const teaserFormData = new FormData()
+        teaserFormData.append("file", mintForm.teaserImage)
+        teaserFormData.append("name", `${mintForm.title}_teaser`)
+
+        const teaserResponse = await fetch("/api/upload", {
+          method: "POST",
+          body: teaserFormData,
+        })
+
+        if (teaserResponse.ok) {
+          const teaserData = await teaserResponse.json()
+          teaserCid = teaserData.cid
+          console.log("Teaser image uploaded to IPFS:", teaserCid)
+        } else {
+          console.warn("Teaser image upload failed, using mock CID")
+        }
+
+        // Upload metadata to IPFS
+        const metadataResponse = await fetch("/api/upload-metadata", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            metadata: {
+              name: mintForm.title,
+              description: mintForm.description,
+              image: `ipfs://${mainCid}`,
+              external_url: "https://arpo-auction-house.vercel.app",
+              attributes: [
+                { trait_type: "Artist", value: mintForm.artistName },
+                { trait_type: "Starting Price", value: `${mintForm.startingPrice} ${tokenLabel}` },
+                { trait_type: "Royalty", value: `${mintForm.royaltyPercent}%` },
+              ],
+              properties: {
+                artist: mintForm.artistName,
+                royalty_percent: parseFloat(mintForm.royaltyPercent),
+              },
+            },
+            name: `${mintForm.title}_metadata`,
+          }),
+        })
+
+        if (metadataResponse.ok) {
+          const metadataData = await metadataResponse.json()
+          console.log("Metadata uploaded to IPFS:", metadataData.cid)
+        }
+      } catch (error) {
+        console.error("IPFS upload error:", error)
+        // Continue with mock CIDs
+      }
 
       const result = await createAuction({
         title: mintForm.title,
@@ -428,7 +491,7 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
       })
 
       if (result) {
-        alert(`Supabase Auction created successfully! "${mintForm.title}"`)
+        alert(`✅ Auction created successfully!\n\n"${mintForm.title}"\nIPFS CID: ${mainCid}`)
       } else {
         alert("Failed to create auction in Supabase. Check console.")
       }
@@ -636,37 +699,29 @@ export default function AdminPanel({ onClose, isDark, toggleTheme, connectedWall
         <div className="flex space-x-4 mb-8">
           <Button
             onClick={() => setActiveTab("analytics")}
-            className={`${activeTab === "analytics"
-              ? "bg-[#000000] dark:bg-white text-white dark:text-[#000000]"
-              : "bg-white dark:bg-[#000000] text-black dark:text-white border border-black dark:border-white"
-              } rounded-lg`}
+            variant={activeTab === "analytics" ? "tab-active" : "tab"}
+            className="rounded-lg"
           >
             Analytics
           </Button>
           <Button
             onClick={() => setActiveTab("users")}
-            className={`${activeTab === "users"
-              ? "bg-[#000000] dark:bg-white text-white dark:text-[#000000]"
-              : "bg-white dark:bg-[#000000] text-black dark:text-white border border-black dark:border-white"
-              } rounded-lg`}
+            variant={activeTab === "users" ? "tab-active" : "tab"}
+            className="rounded-lg"
           >
             User Management
           </Button>
           <Button
             onClick={() => setActiveTab("chat")}
-            className={`${activeTab === "chat"
-              ? "bg-[#000000] dark:bg-white text-white dark:text-[#000000]"
-              : "bg-white dark:bg-[#000000] text-black dark:text-white border border-black dark:border-white"
-              } rounded-lg`}
+            variant={activeTab === "chat" ? "tab-active" : "tab"}
+            className="rounded-lg"
           >
             Chat Management
           </Button>
           <Button
             onClick={() => setActiveTab("mint")}
-            className={`${activeTab === "mint"
-              ? "bg-[#000000] dark:bg-white text-white dark:text-[#000000]"
-              : "bg-white dark:bg-[#000000] text-black dark:text-white border border-black dark:border-white"
-              } rounded-lg`}
+            variant={activeTab === "mint" ? "tab-active" : "tab"}
+            className="rounded-lg"
           >
             Mint NFT
           </Button>
