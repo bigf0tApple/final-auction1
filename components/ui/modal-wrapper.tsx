@@ -67,7 +67,7 @@ export default function ModalWrapper({
             >
                 {/* Header with title and close button */}
                 {(title || showCloseButton) && (
-                    <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 dark:border-gray-800">
+                    <div className="flex justify-between items-center p-3 sm:p-4 border-b border-gray-200 dark:border-gray-800">
                         {title && (
                             <h2
                                 id="modal-title"
@@ -91,7 +91,7 @@ export default function ModalWrapper({
                 )}
 
                 {/* Content */}
-                <div className={title || showCloseButton ? "p-4 sm:p-6" : ""}>
+                <div className={title || showCloseButton ? "p-3 sm:p-4" : ""}>
                     {children}
                 </div>
             </div>
@@ -124,7 +124,7 @@ export function SimpleModal({
                 className={`
                     bg-white dark:bg-[#000000] 
                     border border-black dark:border-white 
-                    rounded-2xl p-6
+                    rounded-2xl p-4
                     ${maxWidth} w-full mx-4
                     ${className}
                 `}

@@ -33,9 +33,9 @@ export function AdminMintConfirmationModal({
 }: AdminMintConfirmationModalProps) {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-[#000000] border border-black dark:border-white rounded-2xl p-6 max-w-md w-full mx-4">
-                <h3 className="text-xl font-bold text-black dark:text-white mb-4">Confirm Mint</h3>
-                <div className="space-y-3 mb-6">
+            <div className="bg-white dark:bg-[#000000] border border-black dark:border-white rounded-2xl p-4 max-w-md w-full mx-4">
+                <h3 className="text-lg font-bold text-black dark:text-white mb-3">Confirm Mint</h3>
+                <div className="space-y-2 mb-4">
                     <div>
                         <span className="text-sm text-gray-600 dark:text-gray-400">Title:</span>
                         <p className="font-semibold text-black dark:text-white">{mintForm.title}</p>
